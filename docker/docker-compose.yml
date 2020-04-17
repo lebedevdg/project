@@ -1,0 +1,49 @@
+version: '3.3'
+
+services:
+
+  mongo:
+    image: mongo:${MONGO_VERSION:-3.2}
+    volumes:
+      - mongo:/data/db
+    networks:
+      net:
+
+  rabbit:
+    image: rabbitmq:${RABBIT_VERSION:-3-management}
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-robot}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_USER:-robot}
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      net:
+
+  robot:
+    image: project/robot:latest
+    restart: on-failure:5
+    entrypoint: sh -c "python -u crawler/crawler.py $URI"
+    depends_on:
+      - rabbit
+      - mongo
+    environment:
+      MONGO: ${MONGO:-mongo}
+      MONGO_PORT: ${MONGO_PORT:-27017}
+      RMQ_HOST: ${RMQ_HOST:-rabbit}
+      RMQ_QUEUE: ${RMQ_QUEUE:-robot}
+      RMQ_USERNAME: ${RMQ_USERNAME:-robot}
+      RMQ_PASSWORD: ${RMQ_PASSWORD:-robot}
+      CHECK_INTERVAL: ${CHECK_INTERVAL:-10}
+#      EXCLUDE_URLS: ${EXCLUDE_URLS:-".*github.com"}
+    networks:
+      net:
+
+volumes:
+  mongo:
+
+networks:
+  net:
+    ipam:
+      config:
+        - subnet: ${NET:-10.0.1.0/24}
