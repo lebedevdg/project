@@ -10,51 +10,54 @@ services:
       net:
 
   rabbit:
-    image: rabbitmq:${RABBIT_VERSION:-3-management}
+    image: rabbitmq:${RABBITMQ_VERSION:-3-management}
+    hostname: rabbitmq
+    volumes:
+      - rabbit:/var/lib/rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-robot}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_USER:-robot}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-guest}
     ports:
-     - "15672:15672" # Порт web интерфейса
+      - ${RABBIT_UI_PUBLISHED_PORT:-15672}:15672  # Порт web интерфейса
     networks:
       net:
 
   robot:
-    image: ${PROJECTNAME}/robot:latest
-    restart: on-failure:5
-    entrypoint: sh -c "python -u crawler/crawler.py $URI"
+    image: ${PROJECTNAME}/robot:${APP_TAG:-latest}
+    restart: on-failure
     depends_on:
       - rabbit
       - mongo
     environment:
-      MONGO: ${MONGO:-mongo}
-      MONGO_PORT: ${MONGO_PORT:-27017}
-      RMQ_HOST: ${RMQ_HOST:-rabbit}
-      RMQ_QUEUE: ${RMQ_QUEUE:-robot}
-      RMQ_USERNAME: ${RMQ_USERNAME:-robot}
-      RMQ_PASSWORD: ${RMQ_PASSWORD:-robot}
-      CHECK_INTERVAL: ${CHECK_INTERVAL:-10}
-#      EXCLUDE_URLS: ${EXCLUDE_URLS:-".*github.com"}
+      - MONGO=${MONGO:-mongo}
+      - MONGO_PORT=${MONGO_PORT:-27017}
+      - RMQ_HOST=${RMQ_HOST:-rabbit}
+      - RMQ_QUEUE=${RMQ_QUEUE:-urls}
+      - RMQ_USERNAME=${RABBITMQ_USER:-guest}
+      - RMQ_PASSWORD=${RABBITMQ_PASSWORD:-guest}
+      - CHECK_INTERVAL=${CHECK_INTERVAL:-10}
+      - EXCLUDE_URLS=${EXCLUDE_URLS:-.*github.com,.*twitter.com}
+    command:
+      - ${URLS:-https://vitkhab.github.io/search_engine_test_site/}
     networks:
       net:
 
   ui:
-    image: ${PROJECTNAME}/ui:latest
-    restart: on-failure:5
-    entrypoint: sh -c "cd ui && FLASK_APP=ui.py gunicorn ui:app -b 0.0.0.0"
+    image: ${PROJECTNAME}/ui:${APP_TAG:-latest}
+    restart: on-failure
     depends_on:
       - mongo
     environment:
-      MONGO: ${MONGO:-mongo}
-      MONGO_PORT: ${MONGO_PORT:-27017}
+      - MONGO=${MONGO:-mongo}
+      - MONGO_PORT-${MONGO_PORT:-27017}
     ports:
-      - "8000:8000"
+      - ${UI_PUBLISHED_PORT:-8000}:8000
     networks:
       net:
 
-
 volumes:
   mongo:
+  rabbit:
 
 networks:
   net:
