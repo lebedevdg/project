@@ -4,23 +4,22 @@ DOCKER_COMMANDS := build push
 COMPOSE_COMMANDS := config up down
 COMPOSE_COMMANDS_MON := configmon upmon downmon
 
-PROJECTNAME := $(shell grep -Po "(?<=PROJECTNAME=)[a-z]+" ./docker/.env)
+ENV_FILE := $(shell test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example')
+
+PROJECTNAME := $(shell grep -Po "(?<=PROJECTNAME=)[a-z]+" $(ENV_FILE))
 
 ifeq '$(strip $(PROJECTNAME))' ''
   $(warning Variable PROJECTNAME is not defined, using value 'user')
-  PROJECTNAME := error
+  PROJECTNAME := user
 endif
-
-ENV_FILE := $(shell test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example')
 
 build: $(APP_IMAGES) $(MON_IMAGES)
 
 $(APP_IMAGES):
-#	cd ./apps/$@; bash docker_build.sh; cd -
 	docker build -t $(PROJECTNAME)/$@ ./apps/$@
 
 $(MON_IMAGES):
-	docker build -t $(PROJECTNAME)/$@ ./$@
+	docker build -t $(PROJECTNAME)/$@ ./monitoring/$@
 
 push:
 ifneq '$(strip $(DOCKER_HUB_PASSWORD))' ''
