@@ -1,0 +1,48 @@
+version: '3.3'
+
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: 'gitlab.project.io'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_CI_URL:-http://127.0.0.1}'
+        gitlab_rails['initial_root_password'] = '${GITLAB_CI_PASSWORD:-password}'
+        gitlab_rails['initial_shared_runners_registration_token'] = '${GITLAB_CI_TOKEN:-A1b2C3d4E5f6G7h8I9j0}'
+
+        pages_external_url 'http://project.io'
+        gitlab_pages['enable'] = true
+        gitlab_pages['inplace_chroot'] = true
+
+        prometheus['enable'] = false
+        gitlab_exporter['listen_address'] = '0.0.0.0'
+        gitlab_exporter['listen_port'] = '9168'
+        sidekiq['listen_address'] = '0.0.0.0'
+        sidekiq['listen_port'] = 8082
+        node_exporter['listen_address'] = '0.0.0.0:9100'
+        redis_exporter['listen_address'] = '0.0.0.0:9121'
+        postgres_exporter['listen_address'] = '0.0.0.0:9187'
+        gitaly['prometheus_listen_addr'] = '0.0.0.0:9236'
+        gitlab_workhorse['prometheus_listen_addr'] = '0.0.0.0:9229'
+        gitlab_rails['monitoring_whitelist'] = ['0.0.0.0/0']
+        nginx['status']['options'] = {
+          "server_tokens" => "off",
+          "access_log" => "off",
+          "allow" => "0.0.0.0"
+        }
+    ports:
+      - '80:80'
+#      - '443:443'
+    volumes:
+      - '/srv/gitlab/config:/etc/gitlab'
+      - '/srv/gitlab/logs:/var/log/gitlab'
+      - '/srv/gitlab/data:/var/opt/gitlab'
+    networks:
+      net:
+
+networks:
+  net:
+    ipam:
+      config:
+        - subnet: ${NET:-10.0.1.0/24}

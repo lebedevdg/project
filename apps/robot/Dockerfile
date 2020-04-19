@@ -17,5 +17,5 @@ ENV RMQ_PASSWORD guest
 ENV CHECK_INTERVAL 10
 #ENV EXCLUDE_URLS .*github.com
 
-#ENTRYPOINT ["python3", "-u", "crawler/crawler.py", "https://vitkhab.github.io/search_engine_test_site/"]
-ENTRYPOINT ["python3", "-u", "crawler/crawler.py"]
+#ENTRYPOINT ["python", "-u", "crawler/crawler.py", "https://vitkhab.github.io/search_engine_test_site/"]
+ENTRYPOINT ["python", "-u", "crawler/crawler.py"]
