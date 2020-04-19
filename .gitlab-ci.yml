@@ -58,9 +58,7 @@ deploy_dev_job:
     DOCKER_TLS_VERIFY: '1'
     DOCKER_HOST: 'tcp://$CI_SERVER_HOST:2376'
     DOCKER_CERT_PATH: '/tmp/$CI_COMMIT_REF_NAME'
-    COMPOSE_PROJECT_NAME: '$CI_COMMIT_REF_NAME'
     PROJECTNAME: '$DOCKER_HUB_LOGIN'
-    APP_TAG: '${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}'
   before_script:
     - mkdir -p $DOCKER_CERT_PATH
     - cp -f $DOCKER_HOST_CA_FILE $DOCKER_CERT_PATH/ca.pem
@@ -76,7 +74,9 @@ deploy_dev_job:
     - docker-compose --version
     - docker ps -as
     - docker image ls
-    - docker-compose --env-file ./docker/.env.example -f ./docker/docker-compose.yml config
+    - export APP_TAG=${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
+    - export ENV_FILE=`test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example'`
+    - docker-compose --env-file $ENV_FILE -f ./docker/docker-compose.yml config
   after_script:
     - docker ps -as
     - docker image ls
@@ -89,7 +89,7 @@ branch_review:
   <<: *branch_review_template
   script:
     - echo "Deploy on branch/$CI_COMMIT_REF_NAME environment"
-    - docker-compose --env-file ./docker/.env.example -f ./docker/docker-compose.yml up -d
+    - docker-compose --env-file $ENV_FILE -f ./docker/docker-compose.yml up -d
   environment:
     name: branch/$CI_COMMIT_REF_NAME
     url: http://$CI_SERVER_HOST:8000
@@ -101,7 +101,7 @@ stop_branch_review:
   when: manual
   script:
     - echo 'Remove branch review app'
-    - docker-compose --env-file ./docker/.env.example -f ./docker/docker-compose.yml down
+    - docker-compose --env-file $ENV_FILE -f ./docker/docker-compose.yml down
     - docker image rm -f $(docker image ls -q ${DOCKER_HUB_LOGIN:-user}/robot) || echo
     - docker image rm -f $(docker image ls -q ${DOCKER_HUB_LOGIN:-user}/ui) || echo
     - docker image rm -f $(docker image ls -q --filter 'dangling=true') || echo
