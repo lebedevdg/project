@@ -1,0 +1,19 @@
+groups:
+  - name: alert.rules
+    rules:
+    - alert: InstanceDown
+      expr: up == 0
+      for: 1m
+      labels:
+        severity: dizaster
+      annotations:
+        description: '{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute'
+        summary: 'Instance {{ $labels.instance }} down'
+    - alert: MemoryUsage500MBexceed
+      expr: container_memory_usage_bytes{container_label_com_docker_compose_project!=""} > 524288000  # 500 MB
+      for: 10s
+      labels:
+        severity: danger
+      annotations:
+          description: 'Container {{ $labels.name }} uses {{ $value | humanize1024 }}B memory'
+          summary: '[{{ $labels.job }}] Container {{ $labels.name }} is using more than 500 MB memory'

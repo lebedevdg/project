@@ -1,5 +1,5 @@
 APP_IMAGES := ui robot
-MON_IMAGES := prometheus mongodb-exporter alertmanager telegraf grafana
+MON_IMAGES := prometheus mongodb-exporter alertmanager grafana rabbitmq
 DOCKER_COMMANDS := build push
 COMPOSE_COMMANDS := config up down
 COMPOSE_COMMANDS_MON := configmon upmon downmon
