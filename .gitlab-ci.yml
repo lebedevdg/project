@@ -1,0 +1,132 @@
+stages:
+  - build
+  - test
+  - review
+  - stage
+  - production
+
+build_job:
+  stage: build
+  image: docker:19.03.8
+  services:
+    - docker:19.03.8-dind
+  before_script:
+    - docker info
+    - docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASSWORD
+    - docker image ls
+  script:
+    - echo 'Building'
+    - docker build -t ${DOCKER_HUB_LOGIN:-user}/robot:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0} ./apps/robot
+    - docker push ${DOCKER_HUB_LOGIN:-user}/robot:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
+    - docker build -t ${DOCKER_HUB_LOGIN:-user}/ui:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0} ./apps/ui
+    - docker push ${DOCKER_HUB_LOGIN:-user}/ui:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
+  after_script:
+    - docker image ls
+
+test_unit_ui_job:
+  stage: test
+  image: python:3.6.0-alpine
+  services:
+    - mongo:3.3
+  variables:
+    MONGO: 'mongo'
+    MONGO_PORT: '27017'
+  before_script:
+    - cd apps/ui
+    - pip install -r requirements.txt -r requirements-test.txt
+  script:
+    - echo 'Testing UI'
+    - python -m unittest discover -s tests/
+
+test_unit_robot_job:
+  stage: test
+  script:
+    - echo 'Testing Robot'
+
+deploy_dev_job:
+  stage: review
+  script:
+    - echo 'Deploy on dev'
+  environment:
+    name: dev
+    url: http://dev.example.com
+
+.branch_review_job: &branch_review_template
+  stage: review
+  image: docker:19.03.8
+  variables:
+    DOCKER_TLS_VERIFY: '1'
+    DOCKER_HOST: 'tcp://$CI_SERVER_HOST:2376'
+    DOCKER_CERT_PATH: '/tmp/$CI_COMMIT_REF_NAME'
+    COMPOSE_PROJECT_NAME: '$CI_COMMIT_REF_NAME'
+    PROJECTNAME: '$DOCKER_HUB_LOGIN'
+    APP_TAG: '${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}'
+  before_script:
+    - mkdir -p $DOCKER_CERT_PATH
+    - cp -f $DOCKER_HOST_CA_FILE $DOCKER_CERT_PATH/ca.pem
+    - cp -f $DOCKER_HOST_CERT_FILE $DOCKER_CERT_PATH/cert.pem
+    - cp -f $DOCKER_HOST_KEY_FILE $DOCKER_CERT_PATH/key.pem
+    - echo "DOCKER_CERT_PATH=$DOCKER_CERT_PATH"
+    - ls -a $DOCKER_CERT_PATH
+    - echo "DOCKER_HOST=$DOCKER_HOST"
+    - docker info
+    - docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASSWORD
+    - apk add py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
+    - pip install docker-compose
+    - docker-compose --version
+    - docker ps -as
+    - docker image ls
+    - docker-compose --env-file ./docker/.env.example -f ./docker/docker-compose.yml config
+  after_script:
+    - docker ps -as
+    - docker image ls
+  only:
+    - branches
+  except:
+    - master
+
+branch_review:
+  <<: *branch_review_template
+  script:
+    - echo "Deploy on branch/$CI_COMMIT_REF_NAME environment"
+    - docker-compose --env-file ./docker/.env.example -f ./docker/docker-compose.yml up -d
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    url: http://$CI_SERVER_HOST:8000
+    on_stop: stop_branch_review
+    auto_stop_in: 3 days
+
+stop_branch_review:
+  <<: *branch_review_template
+  when: manual
+  script:
+    - echo 'Remove branch review app'
+    - docker-compose --env-file ./docker/.env.example -f ./docker/docker-compose.yml down
+    - docker image rm -f $(docker image ls -q ${DOCKER_HUB_LOGIN:-user}/robot) || echo
+    - docker image rm -f $(docker image ls -q ${DOCKER_HUB_LOGIN:-user}/ui) || echo
+    - docker image rm -f $(docker image ls -q --filter 'dangling=true') || echo
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    action: stop
+
+staging:
+  stage: stage
+  when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
+  script:
+    - echo 'Deploy on stage'
+  environment:
+    name: stage
+    url: https://beta.example.com
+
+production:
+  stage: production
+  when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
+  script:
+    - echo 'Deploy on production'
+  environment:
+    name: production
+    url: https://example.com

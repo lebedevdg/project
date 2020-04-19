@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: 'gitlab.example.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_CI_URL:-http://127.0.0.1}'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        gitlab_rails['initial_root_password'] = "${GITLAB_CI_PASSWORD:-password}"
+        gitlab_rails['initial_shared_runners_registration_token'] = "${GITLAB_CI_TOKEN:-A1b2C3d4E5f6G7h8I9j0}"
+    ports:
+      - '80:80'
+#      - '443:443'
+      - '2222:22'
+    volumes:
+      - '/srv/gitlab/config:/etc/gitlab'
+      - '/srv/gitlab/logs:/var/log/gitlab'
+      - '/srv/gitlab/data:/var/opt/gitlab'
+    networks:
+      net:
+
+networks:
+  net:
+    ipam:
+      config:
+        - subnet: ${NET:-10.0.1.0/24}
