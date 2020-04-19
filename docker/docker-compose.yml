@@ -10,7 +10,9 @@ services:
       net:
 
   rabbit:
-    image: rabbitmq:${RABBITMQ_VERSION:-3-management}
+#    image: pivotalrabbitmq/rabbitmq-prometheus:3.9.0-alpha.221-2020.02.12
+#    image: rabbitmq:${RABBITMQ_VERSION:-3-management}
+    image: ${PROJECTNAME}/rabbitmq:${RABBITMQ_VERSION:-latest}
     hostname: rabbitmq
     volumes:
       - rabbit:/var/lib/rabbitmq
@@ -19,6 +21,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-guest}
     ports:
       - ${RABBIT_UI_PUBLISHED_PORT:-15672}:15672  # Порт web интерфейса
+      - "15692:15692"
     networks:
       net:
 
@@ -39,6 +42,8 @@ services:
       - EXCLUDE_URLS=${EXCLUDE_URLS:-.*github.com,.*twitter.com}
     command:
       - ${URLS:-https://vitkhab.github.io/search_engine_test_site/}
+    ports:
+      - ${ROBOT_PUBLISHED_PORT:-8001}:8000
     networks:
       net:
 
