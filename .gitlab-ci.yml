@@ -1,27 +1,9 @@
 stages:
-  - build
   - test
+  - build
   - review
   - stage
   - production
-
-build_job:
-  stage: build
-  image: docker:19.03.8
-  services:
-    - docker:19.03.8-dind
-  before_script:
-    - docker info
-    - docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASSWORD
-    - docker image ls
-  script:
-    - echo 'Building'
-    - docker build -t ${DOCKER_HUB_LOGIN:-user}/robot:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0} ./apps/robot
-    - docker push ${DOCKER_HUB_LOGIN:-user}/robot:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
-    - docker build -t ${DOCKER_HUB_LOGIN:-user}/ui:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0} ./apps/ui
-    - docker push ${DOCKER_HUB_LOGIN:-user}/ui:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
-  after_script:
-    - docker image ls
 
 test_unit_ui_job:
   stage: test
@@ -43,13 +25,27 @@ test_unit_robot_job:
   script:
     - echo 'Testing Robot'
 
-deploy_dev_job:
-  stage: review
+build_job:
+  stage: build
+  image: docker:19.03.8
+  services:
+    - docker:19.03.8-dind
+  before_script:
+    - docker info
+    - docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASSWORD
+    - docker image ls
   script:
-    - echo 'Deploy on dev'
-  environment:
-    name: dev
-    url: http://dev.example.com
+    - echo 'Building'
+    - docker build -t $DOCKER_HUB_LOGIN/robot ./apps/robot
+    - if [[ "$CI_COMMIT_TAG" == "" ]]; then docker push $DOCKER_HUB_LOGIN/robot; fi
+    - docker build -t $DOCKER_HUB_LOGIN/ui ./apps/ui
+    - if [[ "$CI_COMMIT_TAG" == "" ]]; then docker push $DOCKER_HUB_LOGIN/ui; fi
+    - docker tag $DOCKER_HUB_LOGIN/robot $DOCKER_HUB_LOGIN/robot:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
+    - docker push $DOCKER_HUB_LOGIN/robot:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
+    - docker tag $DOCKER_HUB_LOGIN/ui $DOCKER_HUB_LOGIN/ui:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0} ./apps/ui
+    - docker push $DOCKER_HUB_LOGIN/ui:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
+  after_script:
+    - docker image ls
 
 .branch_review_job: &branch_review_template
   stage: review
@@ -101,9 +97,9 @@ stop_branch_review:
   when: manual
   script:
     - echo 'Remove branch review app'
-    - docker-compose --env-file $ENV_FILE -f ./docker/docker-compose.yml down
-    - docker image rm -f $(docker image ls -q ${DOCKER_HUB_LOGIN:-user}/robot) || echo
-    - docker image rm -f $(docker image ls -q ${DOCKER_HUB_LOGIN:-user}/ui) || echo
+    - docker-compose --env-file $ENV_FILE -f ./docker/docker-compose.yml down || echo
+    - docker image rm -f $(docker image ls -q $DOCKER_HUB_LOGIN/robot) || echo
+    - docker image rm -f $(docker image ls -q $DOCKER_HUB_LOGIN/ui) || echo
     - docker image rm -f $(docker image ls -q --filter 'dangling=true') || echo
   environment:
     name: branch/$CI_COMMIT_REF_NAME
