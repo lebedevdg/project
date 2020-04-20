@@ -4,6 +4,7 @@ LABEL maintainer="Meik Minks <mminks@inoxio.de>"
 
 WORKDIR /go/src/github.com/percona/mongodb_exporter
 
+#COPY . .
 RUN git clone -b v0.10.0 https://github.com/percona/mongodb_exporter.git ./
 
 RUN make build
