@@ -40,12 +40,17 @@ build_job:
     - if [[ "$CI_COMMIT_TAG" != "" ]]; then docker push $DOCKER_HUB_LOGIN/robot; fi
     - docker build -t $DOCKER_HUB_LOGIN/ui ./apps/ui
     - if [[ "$CI_COMMIT_TAG" != "" ]]; then docker push $DOCKER_HUB_LOGIN/ui; fi
+
     - docker tag $DOCKER_HUB_LOGIN/robot $DOCKER_HUB_LOGIN/robot:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
     - docker push $DOCKER_HUB_LOGIN/robot:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
     - docker tag $DOCKER_HUB_LOGIN/ui $DOCKER_HUB_LOGIN/ui:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
     - docker push $DOCKER_HUB_LOGIN/ui:${CI_COMMIT_TAG:-1.0.0}.${CI_COMMIT_SHORT_SHA:-0}
+
     - docker build -t $DOCKER_HUB_LOGIN/rabbitmq ./monitoring/rabbitmq
     - docker push $DOCKER_HUB_LOGIN/rabbitmq
+
+    - docker build -t $DOCKER_HUB_LOGIN/fluentd ./logging/fluentd
+    - docker push $DOCKER_HUB_LOGIN/fluentd
   after_script:
     - docker image ls
 
@@ -98,7 +103,7 @@ stop_branch_review:
   <<: *branch_review_template
   when: manual
   script:
-    - echo 'Remove branch review app'
+    - echo "Remove branch/$CI_COMMIT_REF_NAME environment"
     - docker-compose --env-file $ENV_FILE -f ./docker/docker-compose.yml down || echo
     - docker image rm -f $(docker image ls -q $DOCKER_HUB_LOGIN/robot) || echo
     - docker image rm -f $(docker image ls -q $DOCKER_HUB_LOGIN/ui) || echo
