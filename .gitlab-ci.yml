@@ -1,9 +1,30 @@
 stages:
+  - prepare
   - test
   - build
   - review
   - stage
   - production
+
+prepare_job:
+  stage: prepare
+  image: docker:19.03.8
+  services:
+    - docker:19.03.8-dind
+  before_script:
+    - docker info
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker image ls
+  script:
+    - echo 'Building auxiliary docker-compose image'
+    - docker pull $CI_REGISTRY_USER/docker-compose || echo
+    - docker build --cache-from $CI_REGISTRY_USER/docker-compose -t $CI_REGISTRY_USER/docker-compose ./gitlab-ci/docker-compose
+    - docker push $CI_REGISTRY_USER/docker-compose
+  after_script:
+    - docker image ls
 
 test_unit_ui_job:
   stage: test
@@ -38,10 +59,10 @@ build_job:
     - docker image ls
   script:
     - echo 'Building'
-    - cd ./apps/robot; echo "${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}" > build_info.txt; echo "$CI_COMMIT_REF_NAME" >> build_info.txt; cd -
+    - cd ./apps/robot; echo "$CI_COMMIT_SHORT_SHA" > build_info.txt; echo "$CI_COMMIT_REF_NAME" >> build_info.txt; cd -
     - docker build -t $DOCKER_HUB_LOGIN/robot ./apps/robot
     - if [[ "$CI_COMMIT_TAG" != "" ]]; then docker push $DOCKER_HUB_LOGIN/robot; fi
-    - cd ./apps/ui; echo "${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}" > build_info.txt; echo "$CI_COMMIT_REF_NAME" >> build_info.txt; cd -
+    - cd ./apps/ui; echo "$CI_COMMIT_SHORT_SHA" > build_info.txt; echo "$CI_COMMIT_REF_NAME" >> build_info.txt; cd -
     - docker build -t $DOCKER_HUB_LOGIN/ui ./apps/ui
     - if [[ "$CI_COMMIT_TAG" != "" ]]; then docker push $DOCKER_HUB_LOGIN/ui; fi
 
