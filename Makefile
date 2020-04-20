@@ -103,7 +103,13 @@ $(COMPOSE_COMMANDS_STAGE):
 $(COMPOSE_COMMANDS_PROD):
 	eval $$(docker-machine env prod) && echo 'Контекст переключен на prod' && docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose.yml -f ./docker/docker-compose-monitoring.yml $(subst prod,,$(subst up,up -d,$@))
 
+# Получить информацияю по стендам для настройки гитлаба и подключения к веб мордам
+info:
+	@echo '' && $(foreach i,$(ENVIRONMENT),docker-machine env $(i) && echo '';)
 
+
+# Разом гасим весь деплой и удаляем GCP машины
+alldown: standsdown envdown
 
 # Поднимаем стек на всех стендах разом
 standsdown:
