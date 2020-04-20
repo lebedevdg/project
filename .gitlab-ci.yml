@@ -68,17 +68,30 @@ build_job:
     DOCKER_HOST_KEY_FILE: '$DEV_DOCKER_HOST_KEY_FILE'
     PROJECTNAME: '$DOCKER_HUB_LOGIN'
 
+.stage_var_job: &stage_var_template
+  variables:
+    DOCKER_TLS_VERIFY: '1'
+    DOCKER_HOST: 'tcp://$STAGE_DOCKER_HOST_IP:2376'
+    DOCKER_CERT_PATH: '/tmp/$CI_COMMIT_REF_NAME'
+    DOCKER_HOST_CA_FILE: '$STAGE_DOCKER_HOST_CA_FILE'
+    DOCKER_HOST_CERT_FILE: '$STAGE_DOCKER_HOST_CERT_FILE'
+    DOCKER_HOST_KEY_FILE: '$STAGE_DOCKER_HOST_KEY_FILE'
+    PROJECTNAME: '$DOCKER_HUB_LOGIN'
+
+.production_var_job: &production_var_template
+  variables:
+    DOCKER_TLS_VERIFY: '1'
+    DOCKER_HOST: 'tcp://$PROD_DOCKER_HOST_IP:2376'
+    DOCKER_CERT_PATH: '/tmp/$CI_COMMIT_REF_NAME'
+    DOCKER_HOST_CA_FILE: '$PROD_DOCKER_HOST_CA_FILE'
+    DOCKER_HOST_CERT_FILE: '$PROD_DOCKER_HOST_CERT_FILE'
+    DOCKER_HOST_KEY_FILE: '$PROD_DOCKER_HOST_KEY_FILE'
+    PROJECTNAME: '$DOCKER_HUB_LOGIN'
+
 .script_job: &script_template
   image: docker:19.03.8
   before_script:
     - mkdir -p $DOCKER_CERT_PATH
-
-    - echo "$DEV_DOCKER_HOST_CA_FILE"
-    - echo "$DOCKER_HOST_CA_FILE"
-
-#    - cp -f $DOCKER_HOST_CA_FILE $DOCKER_CERT_PATH/ca.pem
-#    - cp -f $DOCKER_HOST_CERT_FILE $DOCKER_CERT_PATH/cert.pem
-#    - cp -f $DOCKER_HOST_KEY_FILE $DOCKER_CERT_PATH/key.pem
     - echo "$DOCKER_HOST_CA_FILE" > $DOCKER_CERT_PATH/ca.pem
     - echo "$DOCKER_HOST_CERT_FILE" > $DOCKER_CERT_PATH/cert.pem
     - echo "$DOCKER_HOST_KEY_FILE" > $DOCKER_CERT_PATH/key.pem
@@ -140,22 +153,28 @@ stop_branch_review_job:
 
 stage_job:
   stage: stage
+  <<: *stage_var_template
+  <<: *script_template
   when: manual
   only:
     - /^\d+\.\d+\.\d+/
   script:
     - echo "Deploy version $APP_TAG on stage"
+    - docker-compose --env-file $ENV_FILE -f ./docker/docker-compose.yml up -d
   environment:
     name: stage
     url: http://$STAGE_DOCKER_HOST_IP:8000
 
 production_job:
   stage: production
+  <<: *production_var_template
+  <<: *script_template
   when: manual
   only:
     - /^\d+\.\d+\.\d+/
   script:
     - echo 'Deploy version $APP_TAG on production'
+    - docker-compose --env-file $ENV_FILE -f ./docker/docker-compose.yml up -d
   environment:
     name: production
     url: https://$PROD_DOCKER_HOST_IP:8000
