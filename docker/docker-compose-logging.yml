@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  elasticsearch:
+    image: elasticsearch:${ELASTICSEARCH_VERSION:-7.4.0}
+    environment:
+      - 'discovery.type=single-node'
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    expose:
+      - 9200
+    ports:
+      - ${ELASTICSEARCH_PUBLISHED_PORT:-9200}:9200/tcp
+    networks:
+      - net
+
+  kibana:
+    image: kibana:${KIBANA_VERSION:-7.4.0}
+    ports:
+      - ${KIBANA_PUBLISHED_PORT:-5601}:5601/tcp
+    networks:
+      - net
+
+volumes:
+  elasticsearch_data:
+
+networks:
+  net:
+    ipam:
+      config:
+        - subnet: ${NET:-10.0.1.0/24}
