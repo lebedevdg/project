@@ -4,6 +4,7 @@ services:
 
   mongo:
     image: mongo:${MONGO_VERSION:-3.2}
+    restart: always
     volumes:
       - mongo:/data/db
     networks:
@@ -13,6 +14,7 @@ services:
 #    image: pivotalrabbitmq/rabbitmq-prometheus:3.9.0-alpha.221-2020.02.12
 #    image: rabbitmq:${RABBITMQ_VERSION:-3-management}
     image: ${PROJECTNAME}/rabbitmq:${RABBITMQ_VERSION:-latest}
+    restart: always
     hostname: rabbitmq
     volumes:
       - rabbit:/var/lib/rabbitmq
@@ -20,14 +22,14 @@ services:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-guest}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-guest}
     ports:
-      - ${RABBIT_UI_PUBLISHED_PORT:-15672}:15672  # Порт web интерфейса
-      - "15692:15692"
+      - ${RABBIT_UI_PUBLISHED_PORT:-15672}:15672/tcp       # Порт web интерфейса
+      - ${RABBIT_METRICS_PUBLISHED_PORT:-15692}:15692/tcp  # Метрики
     networks:
       net:
 
   robot:
     image: ${PROJECTNAME}/robot:${APP_TAG:-latest}
-    restart: on-failure
+    restart: always
     depends_on:
       - rabbit
       - mongo
@@ -38,25 +40,25 @@ services:
       - RMQ_QUEUE=${RMQ_QUEUE:-urls}
       - RMQ_USERNAME=${RABBITMQ_USER:-guest}
       - RMQ_PASSWORD=${RABBITMQ_PASSWORD:-guest}
-      - CHECK_INTERVAL=${CHECK_INTERVAL:-10}
+      - CHECK_INTERVAL=${CHECK_INTERVAL:-100}
       - EXCLUDE_URLS=${EXCLUDE_URLS:-.*github.com,.*twitter.com}
     command:
       - ${URLS:-https://vitkhab.github.io/search_engine_test_site/}
     ports:
-      - ${ROBOT_PUBLISHED_PORT:-8001}:8000
+      - ${ROBOT_PUBLISHED_PORT:-8001}:8000/tcp
     networks:
       net:
 
   ui:
     image: ${PROJECTNAME}/ui:${APP_TAG:-latest}
-    restart: on-failure
+    restart: always
     depends_on:
       - mongo
     environment:
       - MONGO=${MONGO:-mongo}
       - MONGO_PORT=${MONGO_PORT:-27017}
     ports:
-      - ${UI_PUBLISHED_PORT:-8000}:8000
+      - ${UI_PUBLISHED_PORT:-8000}:8000/tcp
     networks:
       net:
 
