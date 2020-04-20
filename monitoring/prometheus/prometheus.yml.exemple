@@ -1,4 +1,5 @@
 ---
+
 global:
   scrape_interval: '5s'
 
@@ -30,14 +31,14 @@ scrape_configs:
   - job_name: 'ui_stage'
     static_configs:
       - targets:
-        - 'ui:8000'
+        - '!STAGEui:8000'
         labels:
           namespace: Stage
 
   - job_name: 'ui_prod'
     static_configs:
       - targets:
-        - 'ui:8000'
+        - '!PRODui:8000'
         labels:
           namespace: Prod
 
@@ -53,14 +54,14 @@ scrape_configs:
   - job_name: 'robot_stage'
     static_configs:
       - targets:
-        - 'robot:8000'
+        - '!STAGErobot:8001'
         labels:
           namespace: Stage
 
   - job_name: 'robot_prod'
     static_configs:
       - targets:
-        - 'robot:8000'
+        - '!PRODrobot:8001'
         labels:
           namespace: Prod
 
@@ -76,14 +77,14 @@ scrape_configs:
   - job_name: 'node_stage'
     static_configs:
       - targets:
-        - 'node-exporter:9100'
+        - '!STAGEnode-exporter:9100'
         labels:
           namespace: Stage
 
   - job_name: 'node_prod'
     static_configs:
       - targets:
-        - 'node-exporter:9100'
+        - '!PRODnode-exporter:9100'
         labels:
           namespace: Prod
 
@@ -99,14 +100,14 @@ scrape_configs:
   - job_name: 'mongo_stage'
     static_configs:
       - targets:
-        - 'mongodb-exporter:9216'
+        - '!STAGEmongodb-exporter:9216'
         labels:
           namespace: Stage
 
   - job_name: 'mongo_prod'
     static_configs:
       - targets:
-        - 'mongodb-exporter:9216'
+        - '!PRODmongodb-exporter:9216'
         labels:
           namespace: Prod
 
@@ -128,7 +129,7 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: blackbox-exporter:9115  # The blackbox exporter's real hostname and port
+        replacement: blackbox-exporter:9115  # The blackbox exporter's real urn
 
   - job_name: 'blackbox_stage'
     metrics_path: /probe
@@ -146,7 +147,7 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: blackbox-exporter:9115  # The blackbox exporter's real hostname and port
+        replacement: !STAGEblackbox-exporter:9115  # The blackbox exporter's real urn
 
   - job_name: 'blackbox_prod'
     metrics_path: /probe
@@ -164,7 +165,7 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: blackbox-exporter:9115  # The blackbox exporter's real hostname and port
+        replacement: !PRODblackbox-exporter:9115  # The blackbox exporter's real urn
 
 ##Cadvisor##
 
@@ -178,14 +179,14 @@ scrape_configs:
   - job_name: 'cadvisor_stage'
     static_configs:
       - targets:
-        - 'cadvisor:8080'
+        - '!STAGEcadvisor:8080'
         labels:
           namespace: Stage
 
   - job_name: 'cadvisor_prod'
     static_configs:
       - targets:
-        - 'cadvisor:8080'
+        - '!PRODcadvisor:8080'
         labels:
           namespace: Prod
 
@@ -201,16 +202,18 @@ scrape_configs:
   - job_name: 'rabbitmq_stage'
     static_configs:
       - targets:
-        - 'rabbit:15692'
+        - '!STAGErabbit:15692'
       - labels:
           namespace: Stage
 
   - job_name: 'rabbitmq_prod'
     static_configs:
       - targets:
-        - 'rabbit:15692'
+        - '!PRODrabbit:15692'
       - labels:
           namespace: Prod
+
+##GtlabCI##
 
   - job_name: 'gitlab-process'
     scrape_interval: 5s

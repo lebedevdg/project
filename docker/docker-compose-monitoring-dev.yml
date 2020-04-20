@@ -2,6 +2,20 @@ version: '3.3'
 
 services:
 
+  prometheus:
+    image: ${PROJECTNAME}/prometheus:${PROMETHEUS_VERSION:-latest}
+    volumes:
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=1d'
+    networks:
+      net:
+    ports:
+      - '9090:9090'
+
+
   node-exporter:
     image: prom/node-exporter:v0.15.2
     user: root
@@ -53,6 +67,33 @@ services:
       - '8080:8080'
     networks:
       net:
+
+
+  grafana:
+    image: ${PROJECTNAME}/grafana:${GRAFANA_VERSION:-latest}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=secret
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    networks:
+      net:
+
+
+  alertmanager:
+    image: ${PROJECTNAME}/alertmanager:${ALERTMANAGER_VERSION:-latest}
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    ports:
+      - 9093:9093
+    networks:
+      net:
+
 
 volumes:
   prometheus_data:

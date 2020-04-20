@@ -2146,18 +2146,6 @@
             "selected": false,
             "text": "Stage",
             "value": "Stage"
-          },
-          {
-            "$$hashKey": "object:1727",
-            "selected": false,
-            "text": "dev",
-            "value": "dev"
-          },
-          {
-            "$$hashKey": "object:1728",
-            "selected": false,
-            "text": "prod",
-            "value": "prod"
           }
         ],
         "query": "label_values(namespace)",
