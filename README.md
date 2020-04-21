@@ -50,9 +50,10 @@ docker-machine create --driver google --google-machine-image https://www.googlea
 
 ### Порядок сборки:
 
-Поднимаем все - make allup
+#### Поднимаем все 
+make allup
 
-Для достижения цели делается следующее:
+###### При этом мы::
 
 Создаем окружения: make envup Получить информацию по окружениям можно: make info
 
@@ -115,9 +116,9 @@ git checkout -b testbranch git remote add gitlab http://<docker-host_external_IP
 если добавить какой-нибудь тэг, то можно будет по кнопке задеплоить приложение на окружения stage и prod
 git tag 1.2.3 git push gitlab testbranch --tags
 
-Опускаем все: make alldown
+#### Опускаем все: 
+make alldown
 
-При этом мы:
-
+##### При этом мы:
 Гасим приложения на всех стендах: make standsdown (или постендно: make downdev downstage downprod)
 Удаляем все машины GCP: make envdown
