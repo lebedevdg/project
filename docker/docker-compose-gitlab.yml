@@ -32,7 +32,8 @@ services:
           "allow" => "0.0.0.0"
         }
     ports:
-      - '80:80'
+      - '${GITLAB_CI_PUBLISHED_PORT:-80}:80/tcp'
+#      - '80:80'
 #      - '443:443'
     volumes:
       - '/srv/gitlab/config:/etc/gitlab'
