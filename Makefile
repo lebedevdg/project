@@ -31,17 +31,17 @@ envup: $(ENVIRONMENT)
 
 dev:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
-	--google-machine-type n1-standard-2 --google-project $(GPROJECT) --google-zone europe-north1-b \
+	--google-machine-type n1-standard-2 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 50 \
 	--google-open-port 3000/tcp --google-open-port 9090/tcp --google-open-port 9090/tcp --google-open-port 80/tcp --google-open-port 8000/tcp --google-open-port 8080/tcp --google-open-port 15692/tcp --google-open-port 5601/tcp $@
 
 stage:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
-	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b \
+	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 20 \
 	--google-open-port 9100/tcp --google-open-port 9216/tcp --google-open-port 9115/tcp --google-open-port 8080/tcp --google-open-port 8001/tcp --google-open-port 8000/tcp --google-open-port 15692/tcp --google-open-port 15672/tcp --google-open-port 5601/tcp $@
 
 prod:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
-	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b \
+	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 20 \
 	--google-open-port 9100/tcp --google-open-port 9216/tcp --google-open-port 9115/tcp --google-open-port 8080/tcp --google-open-port 8001/tcp --google-open-port 8000/tcp --google-open-port 15692/tcp --google-open-port 15672/tcp --google-open-port 5601/tcp $@
 
 
