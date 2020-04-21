@@ -56,7 +56,7 @@ prepare:
 build: $(APP_IMAGES) $(MON_IMAGES) $(LOG_IMAGES)
 
 $(APP_IMAGES):
-	docker build -t $(PROJECTNAME)/$@ ./apps/$@
+	cd ./apps/$@; sh docker_build.sh; cd -
 
 $(MON_IMAGES):
 	docker build -t $(PROJECTNAME)/$@ ./monitoring/$@
