@@ -24,7 +24,7 @@ cadvisor:8080
 rabbitmq:15692(метрики), 15672(web морда)
 kibana:5601
 
-Поправить веб хук для отправки сообщений в Slack:
+Поправить веб хук и имя канала(секция slack_configs:) для отправки сообщений в Slack:
 monitoring/alertmanager/config.yml
 
 
