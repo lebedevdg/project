@@ -24,7 +24,7 @@ cadvisor:8080
 rabbitmq:15692(метрики), 15672(web морда)
 kibana:5601
 
-Поправить веб хук для отправки сообщений в Slack:
+Поправить веб хук и имя канала(секция slack_configs:) для отправки сообщений в Slack:
 monitoring/alertmanager/config.yml
 
 
@@ -72,7 +72,7 @@ export DOCKER_HUB_PASSWORD=пароль
 Но для полноценной работы CI/CD требуется минимальная ручная донастройка GitLab:
 
 # заходим в Gitlab по адресу http://<docker-host_external_IP> под пользователем root и паролем, который был задан ранее в ./docker/.env файле
-# там в Admin Area идем в Settings, там в Sign-up restrictions выключаем Sign-up enabled, делаем Save changes
+# там в Admin Area идем в Settings, там выбираем Users->Features->Sign-Up->Sign-up restrictions, выключаем Sign-up enabled, делаем Save changes
 # далее в Groups создаем новую Group, например, otus, а в ней новый blank Project, например, project
 
 # в Project, который мы создали, в Settings -> Integrations -> Slack notifications добавляем Webhook

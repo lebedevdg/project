@@ -29,17 +29,18 @@ BLACKBOX_PUBLISHED_PORT := $(shell grep -Po "(?<=BLACKBOX_PUBLISHED_PORT=)[a-z]+
 NODE_EXPORTER_PUBLISHED_PORT :=$ (shell grep -Po "(?<=NODE_EXPORTER_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
 
 # Путь до .env в переменну, если его нет, используем .env.example
-ENV_FILE := $(shell test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example')
+ENV_FILE = $(shell test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example')
 # Получаем логин от докер хаба, он же имя проекта для сборки образов
-PROJECTNAME := $(shell grep -Po "(?<=PROJECTNAME=)[a-z]+" $(ENV_FILE))
+PROJECTNAME = $(shell grep -Po "(?<=PROJECTNAME=)[a-z]+" $(ENV_FILE))
 # Получаем имя проекта в GCP
-GPROJECT := $(shell grep -Po "(?<=GPROJECT=).+" $(ENV_FILE))
+GPROJECT = $(shell grep -Po "(?<=GPROJECT=).+" $(ENV_FILE))
 # ip гитлаба
 GITLAB_CI_URL = $(shell grep -Po "(?<=GITLAB_CI_URL=).+" $(ENV_FILE))
 # Токен гитлаба
-GITLAB_CI_TOKEN := $(shell grep -Po "(?<=GITLAB_CI_TOKEN=).+" $(ENV_FILE))
+GITLAB_CI_TOKEN = $(shell grep -Po "(?<=GITLAB_CI_TOKEN=).+" $(ENV_FILE))
 # Пароль от докер хаба
-DOCKER_HUB_PASSWORD := $(shell grep -Po "(?<=DOCKER_HUB_PASSWORD=)[a-z]+" $(ENV_FILE))
+DOCKER_HUB_PASSWORD = $(shell grep -Po "(?<=DOCKER_HUB_PASSWORD=)[a-z]+" $(ENV_FILE))
+
 
 # Поднимаем все разом
 allup: envup prepare build push standsup
@@ -51,16 +52,18 @@ dev:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
 	--google-machine-type n1-standard-2 --google-project $(GPROJECT) --google-zone europe-north1-b \
 	--google-open-port $(GRAFANA_PUBLISHED_PORT)/tcp --google-open-port $(PROMETHEUS_PUBLISHED_PORT)/tcp --google-open-port $(GITLAB_CI_PUBLISHED_PORT)/tcp --google-open-port $(UI_PUBLISHED_PORT)/tcp --google-open-port $(CADVISOR_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_METRICS_PUBLISHED_PORT)/tcp --google-open-port $(KIBANA_PUBLISHED_PORT)/tcp --google-open-port $(ALERTMANAGER_PUBLISHED_PORT)/tcp $@
+	--google-machine-type n1-standard-2 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 50 \
+	--google-open-port 3000/tcp --google-open-port 9090/tcp --google-open-port 9090/tcp --google-open-port 80/tcp --google-open-port 8000/tcp --google-open-port 8080/tcp --google-open-port 15692/tcp --google-open-port 5601/tcp $@
 
 stage:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
-	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b \
-	--google-open-port $(NODE_EXPORTER_PUBLISHED_PORT)/tcp --google-open-port $(MONGO_EXPORTER_PUBLISHED_PORT)/tcp --google-open-port $(BLACKBOX_PUBLISHED_PORT)/tcp --google-open-port $(CADVISOR_PUBLISHED_PORT)/tcp --google-open-port $(ROBOT_PUBLISHED_PORT)/tcp --google-open-port $(UI_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_METRICS_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_UI_PUBLISHED_PORT)/tcp --google-open-port $(KIBANA_PUBLISHED_PORT)/tcp $@
+	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 20 \
+	--google-open-port 9100/tcp --google-open-port 9216/tcp --google-open-port 9115/tcp --google-open-port 8080/tcp --google-open-port 8001/tcp --google-open-port 8000/tcp --google-open-port 15692/tcp --google-open-port 15672/tcp --google-open-port 5601/tcp $@
 
 prod:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
-	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b \
-	--google-open-port $(NODE_EXPORTER_PUBLISHED_PORT)/tcp --google-open-port $(MONGO_EXPORTER_PUBLISHED_PORT)/tcp --google-open-port $(BLACKBOX_PUBLISHED_PORT)/tcp --google-open-port $(CADVISOR_PUBLISHED_PORT)/tcp --google-open-port $(ROBOT_PUBLISHED_PORT)/tcp --google-open-port $(UI_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_METRICS_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_UI_PUBLISHED_PORT)/tcp --google-open-port $(KIBANA_PUBLISHED_PORT)/tcp $@
+	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 20 \
+	--google-open-port 9100/tcp --google-open-port 9216/tcp --google-open-port 9115/tcp --google-open-port 8080/tcp --google-open-port 8001/tcp --google-open-port 8000/tcp --google-open-port 15692/tcp --google-open-port 15672/tcp --google-open-port 5601/tcp $@
 
 
 # Подготавливаем конфиг prometheus перед сборкой образа, заменяем адреса dev и prod окружений на ip полученные через docker-machine
@@ -75,7 +78,7 @@ prepare:
 build: $(APP_IMAGES) $(MON_IMAGES) $(LOG_IMAGES)
 
 $(APP_IMAGES):
-	cd ./apps/$@; sh docker_build.sh; cd -
+	cd ./apps/$@; sh docker_build.sh $(PROJECTNAME); cd -
 
 $(MON_IMAGES):
 	docker build -t $(PROJECTNAME)/$@ ./monitoring/$@
@@ -104,7 +107,8 @@ $(COMPOSE_COMMANDS_LOCAL_MON):
 $(COMPOSE_COMMANDS_LOCAL_MOND):
 	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-monitoring-dev.yml $(subst mond,,$(subst up,up -d,$@))
 $(COMPOSE_COMMANDS_LOCAL_GIT):
-	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-gitlab.yml $(subst git,,$(subst up,up -d,$@)) #&& ./gitlab-ci/set_up_runner.sh $(subst git,,$@)
+	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-gitlab.yml $(subst git,,$(subst up,up -d,$@)) && \
+	./gitlab-ci/set_up_runner.sh $(subst git,,$@) gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
 $(COMPOSE_COMMANDS_LOCAL_LOG):
 	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-logging.yml $(subst log,,$(subst up,up -d,$@))
 
@@ -114,8 +118,8 @@ standsup: updev upstage upprod
 # Поднимаем стек на dev
 $(COMPOSE_COMMANDS_DEV):
 	eval $$(docker-machine env dev) && echo 'Контекст переключен на dev' && docker-compose --env-file $(ENV_FILE) \
-	-f ./docker/docker-compose.yml -f ./docker/docker-compose-monitoring.yml -f ./docker/docker-compose-gitlab.yml -f ./docker/docker-compose-monitoring-dev.yml -f ./docker/docker-compose-logging.yml $(subst dev,,$(subst up,up -d,$@)) #&& \
-#	./gitlab-ci/set_up_runner.sh $(subst dev,,$@)
+	-f ./docker/docker-compose.yml -f ./docker/docker-compose-monitoring.yml -f ./docker/docker-compose-gitlab.yml -f ./docker/docker-compose-monitoring-dev.yml -f ./docker/docker-compose-logging.yml $(subst dev,,$(subst up,up -d,$@)) && \
+	./gitlab-ci/set_up_runner.sh $(subst dev,,$@) gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
 
 
 # Поднимаем стек на stage

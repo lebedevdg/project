@@ -3,18 +3,19 @@ set -e
 
 RUNNER_COMMAND=${1:-up}
 
+GITLAB_CI_RUNNER_NAME=${2:-$GITLAB_CI_RUNNER_NAME}
+GITLAB_CI_RUNNER_NAME=${GITLAB_CI_RUNNER_NAME:-gitlab-runner}
+
+
 if [ "$RUNNER_COMMAND" = "up" ]
 then
-  GITLAB_CI_URL=${2:-$GITLAB_CI_URL}
+  GITLAB_CI_URL=${3:-$GITLAB_CI_URL}
   GITLAB_CI_URL=${GITLAB_CI_URL:-http://127.0.0.1}
   echo "GITLAB_CI_URL=$GITLAB_CI_URL"
 
-  GITLAB_CI_TOKEN=${3:-$GITLAB_CI_TOKEN}
+  GITLAB_CI_TOKEN=${4:-$GITLAB_CI_TOKEN}
   GITLAB_CI_TOKEN=${GITLAB_CI_TOKEN:-A1b2C3d4E5f6G7h8I9j0}
   echo "GITLAB_CI_TOKEN=$GITLAB_CI_TOKEN"
-
-  GITLAB_CI_RUNNER_NAME=${4:-$GITLAB_CI_RUNNER_NAME}
-  GITLAB_CI_RUNNER_NAME=${GITLAB_CI_RUNNER_NAME:-gitlab-runner}
 
   echo "Starting runner $GITLAB_CI_RUNNER_NAME ..."
   # запускаем runner:
@@ -45,9 +46,6 @@ fi
 
 if [ "$RUNNER_COMMAND" = "down" ]
 then
-  GITLAB_CI_RUNNER_NAME=${2:-$GITLAB_CI_RUNNER_NAME}
-  GITLAB_CI_RUNNER_NAME=${GITLAB_CI_RUNNER_NAME:-gitlab-runner}
-
   echo "Unregistering runner $GITLAB_CI_RUNNER_NAME ..."
   # разрегистрируем runner:
   docker exec -it $GITLAB_CI_RUNNER_NAME gitlab-runner unregister \
