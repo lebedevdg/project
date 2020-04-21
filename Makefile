@@ -13,15 +13,15 @@ COMPOSE_COMMANDS_PROD := configprod upprod downprod
 COMPOSE_COMMANDS_LOCAL_LOG := conflog uplog downlog
 
 # Путь до .env в переменну, если его нет, используем .env.example
-ENV_FILE := $(shell test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example')
+ENV_FILE = $(shell test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example')
 # Получаем логин от докер хаба, он же имя проекта для сборки образов
-PROJECTNAME := $(shell grep -Po "(?<=PROJECTNAME=)[a-z]+" $(ENV_FILE))
+PROJECTNAME = $(shell grep -Po "(?<=PROJECTNAME=)[a-z]+" $(ENV_FILE))
 # Получаем имя проекта в GCP
-GPROJECT := $(shell grep -Po "(?<=GPROJECT=).+" $(ENV_FILE))
+GPROJECT = $(shell grep -Po "(?<=GPROJECT=).+" $(ENV_FILE))
 # ip гитлаба
-GITLAB_CI_URL := $(grep -Po "(?<=ITLAB_CI_URL=http://).+" $(ENV_FILE)
+GITLAB_CI_URL = $(grep -Po "(?<=ITLAB_CI_URL=).+" $(ENV_FILE)
 # Токен гитлаба
-GITLAB_CI_TOKEN := $(shell grep -Po "(?<=GITLAB_CI_TOKEN=).+" $(ENV_FILE))
+GITLAB_CI_TOKEN = $(shell grep -Po "(?<=GITLAB_CI_TOKEN=).+" $(ENV_FILE))
 
 # Поднимаем все разом
 allup: envup prepare build push standsup
@@ -89,7 +89,8 @@ $(COMPOSE_COMMANDS_LOCAL_MON):
 $(COMPOSE_COMMANDS_LOCAL_MOND):
 	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-monitoring-dev.yml $(subst mond,,$(subst up,up -d,$@))
 $(COMPOSE_COMMANDS_LOCAL_GIT):
-	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-gitlab.yml $(subst git,,$(subst up,up -d,$@)) #&& ./gitlab-ci/set_up_runner.sh $(subst git,,$@)
+	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-gitlab.yml $(subst git,,$(subst up,up -d,$@)) && \
+	./gitlab-ci/set_up_runner.sh $(subst git,,$@) gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
 $(COMPOSE_COMMANDS_LOCAL_LOG):
 	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-logging.yml $(subst log,,$(subst up,up -d,$@))
 
@@ -99,8 +100,8 @@ standsup: updev upstage upprod
 # Поднимаем стек на dev
 $(COMPOSE_COMMANDS_DEV):
 	eval $$(docker-machine env dev) && echo 'Контекст переключен на dev' && docker-compose --env-file $(ENV_FILE) \
-	-f ./docker/docker-compose.yml -f ./docker/docker-compose-monitoring.yml -f ./docker/docker-compose-gitlab.yml -f ./docker/docker-compose-monitoring-dev.yml -f ./docker/docker-compose-logging.yml $(subst dev,,$(subst up,up -d,$@)) #&& \
-#	./gitlab-ci/set_up_runner.sh $(subst dev,,$@)
+	-f ./docker/docker-compose.yml -f ./docker/docker-compose-monitoring.yml -f ./docker/docker-compose-gitlab.yml -f ./docker/docker-compose-monitoring-dev.yml -f ./docker/docker-compose-logging.yml $(subst dev,,$(subst up,up -d,$@)) && \
+	./gitlab-ci/set_up_runner.sh $(subst dev,,$@) gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
 
 
 # Поднимаем стек на stage
