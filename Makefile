@@ -12,34 +12,34 @@ COMPOSE_COMMANDS_STAGE := configstage upstage downstage
 COMPOSE_COMMANDS_PROD := configprod upprod downprod
 COMPOSE_COMMANDS_LOCAL_LOG := conflog uplog downlog
 
+# Путь до .env в переменну, если его нет, используем .env.example
+ENV_FILE := $(shell test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example')
 
 # Порты который открваются у машин GCP
-RABBIT_UI_PUBLISHED_PORT := $(shell grep -Po "(?<=RABBIT_UI_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-RABBIT_METRICS_PUBLISHED_PORT := $(shell grep -Po "(?<=RABBIT_METRICS_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-ROBOT_PUBLISHED_PORT := $(shell grep -Po "(?<=ROBOT_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-UI_PUBLISHED_PORT := $(shell grep -Po "(?<=UI_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-PROMETHEUS_PUBLISHED_PORT := $(shell grep -Po "(?<=PROMETHEUS_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-GRAFANA_PUBLISHED_PORT := $(shell grep -Po "(?<=GRAFANA_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-ALERTMANAGER_PUBLISHED_PORT := $(shell grep -Po "(?<=ALERTMANAGER_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-CADVISOR_PUBLISHED_PORT := $(shell grep -Po "(?<=CADVISOR_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-KIBANA_PUBLISHED_PORT := $(shell grep -Po "(?<=KIBANA_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-GITLAB_CI_PUBLISHED_PORT := $(shell grep -Po "(?<=GITLAB_CI_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-MONGO_EXPORTER_PUBLISHED_PORT := $(shell grep -Po "(?<=MONGO_EXPORTER_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-BLACKBOX_PUBLISHED_PORT := $(shell grep -Po "(?<=BLACKBOX_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
-NODE_EXPORTER_PUBLISHED_PORT :=$ (shell grep -Po "(?<=NODE_EXPORTER_PUBLISHED_PORT=)[a-z]+" $(ENV_FILE))
+RABBIT_UI_PUBLISHED_PORT = $(shell grep -Po "(?<=^RABBIT_UI_PUBLISHED_PORT=).+" $(ENV_FILE))
+RABBIT_METRICS_PUBLISHED_PORT = $(shell grep -Po "(?<=^RABBIT_METRICS_PUBLISHED_PORT=).+" $(ENV_FILE))
+ROBOT_PUBLISHED_PORT = $(shell grep -Po "(?<=^ROBOT_PUBLISHED_PORT=).+" $(ENV_FILE))
+UI_PUBLISHED_PORT = $(shell grep -Po "(?<=^UI_PUBLISHED_PORT=).+" $(ENV_FILE))
+PROMETHEUS_PUBLISHED_PORT = $(shell grep -Po "(?<=^PROMETHEUS_PUBLISHED_PORT=).+" $(ENV_FILE))
+GRAFANA_PUBLISHED_PORT = $(shell grep -Po "(?<=^GRAFANA_PUBLISHED_PORT=).+" $(ENV_FILE))
+ALERTMANAGER_PUBLISHED_PORT = $(shell grep -Po "(?<=^ALERTMANAGER_PUBLISHED_PORT=).+" $(ENV_FILE))
+CADVISOR_PUBLISHED_PORT = $(shell grep -Po "(?<=^CADVISOR_PUBLISHED_PORT=).+" $(ENV_FILE))
+KIBANA_PUBLISHED_PORT = $(shell grep -Po "(?<=^KIBANA_PUBLISHED_PORT=).+" $(ENV_FILE))
+GITLAB_CI_PUBLISHED_PORT = $(shell grep -Po "(?<=^GITLAB_CI_PUBLISHED_PORT=).+" $(ENV_FILE))
+MONGO_EXPORTER_PUBLISHED_PORT = $(shell grep -Po "(?<=^MONGO_EXPORTER_PUBLISHED_PORT=).+" $(ENV_FILE))
+BLACKBOX_PUBLISHED_PORT = $(shell grep -Po "(?<=^BLACKBOX_PUBLISHED_PORT=).+" $(ENV_FILE))
+NODE_EXPORTER_PUBLISHED_PORT = $(shell grep -Po "(?<=^NODE_EXPORTER_PUBLISHED_PORT=).+" $(ENV_FILE))
 
-# Путь до .env в переменну, если его нет, используем .env.example
-ENV_FILE = $(shell test -f ./docker/.env && echo './docker/.env' || echo './docker/.env.example')
 # Получаем логин от докер хаба, он же имя проекта для сборки образов
-PROJECTNAME = $(shell grep -Po "(?<=PROJECTNAME=)[a-z]+" $(ENV_FILE))
+PROJECTNAME = $(shell grep -Po "(?<=^PROJECTNAME=).+" $(ENV_FILE))
 # Получаем имя проекта в GCP
-GPROJECT = $(shell grep -Po "(?<=GPROJECT=).+" $(ENV_FILE))
+GPROJECT = $(shell grep -Po "(?<=^GPROJECT=).+" $(ENV_FILE))
 # ip гитлаба
-GITLAB_CI_URL = $(shell grep -Po "(?<=GITLAB_CI_URL=).+" $(ENV_FILE))
+GITLAB_CI_URL = $(shell grep -Po "(?<=^GITLAB_CI_URL=).+" $(ENV_FILE))
 # Токен гитлаба
-GITLAB_CI_TOKEN = $(shell grep -Po "(?<=GITLAB_CI_TOKEN=).+" $(ENV_FILE))
+GITLAB_CI_TOKEN = $(shell grep -Po "(?<=^GITLAB_CI_TOKEN=).+" $(ENV_FILE))
 # Пароль от докер хаба
-DOCKER_HUB_PASSWORD = $(shell grep -Po "(?<=DOCKER_HUB_PASSWORD=)[a-z]+" $(ENV_FILE))
+DOCKER_HUB_PASSWORD = $(shell grep -Po "(?<=^DOCKER_HUB_PASSWORD=).+" $(ENV_FILE))
 
 
 # Поднимаем все разом
@@ -50,20 +50,24 @@ envup: $(ENVIRONMENT)
 
 dev:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
-	--google-machine-type n1-standard-2 --google-project $(GPROJECT) --google-zone europe-north1-b \
-	--google-open-port $(GRAFANA_PUBLISHED_PORT)/tcp --google-open-port $(PROMETHEUS_PUBLISHED_PORT)/tcp --google-open-port $(GITLAB_CI_PUBLISHED_PORT)/tcp --google-open-port $(UI_PUBLISHED_PORT)/tcp --google-open-port $(CADVISOR_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_METRICS_PUBLISHED_PORT)/tcp --google-open-port $(KIBANA_PUBLISHED_PORT)/tcp --google-open-port $(ALERTMANAGER_PUBLISHED_PORT)/tcp $@
 	--google-machine-type n1-standard-2 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 50 \
-	--google-open-port 3000/tcp --google-open-port 9090/tcp --google-open-port 9090/tcp --google-open-port 80/tcp --google-open-port 8000/tcp --google-open-port 8080/tcp --google-open-port 15692/tcp --google-open-port 5601/tcp $@
+	--google-open-port $(GRAFANA_PUBLISHED_PORT)/tcp --google-open-port $(PROMETHEUS_PUBLISHED_PORT)/tcp --google-open-port $(GITLAB_CI_PUBLISHED_PORT)/tcp \
+	--google-open-port $(UI_PUBLISHED_PORT)/tcp --google-open-port $(CADVISOR_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_METRICS_PUBLISHED_PORT)/tcp \
+	--google-open-port $(KIBANA_PUBLISHED_PORT)/tcp --google-open-port $(ALERTMANAGER_PUBLISHED_PORT)/tcp $@
 
 stage:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
 	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 20 \
-	--google-open-port 9100/tcp --google-open-port 9216/tcp --google-open-port 9115/tcp --google-open-port 8080/tcp --google-open-port 8001/tcp --google-open-port 8000/tcp --google-open-port 15692/tcp --google-open-port 15672/tcp --google-open-port 5601/tcp $@
+	--google-open-port $(NODE_EXPORTER_PUBLISHED_PORT)/tcp --google-open-port $(MONGO_EXPORTER_PUBLISHED_PORT)/tcp --google-open-port $(BLACKBOX_PUBLISHED_PORT)/tcp \
+	--google-open-port $(CADVISOR_PUBLISHED_PORT)/tcp --google-open-port $(ROBOT_PUBLISHED_PORT)/tcp --google-open-port $(UI_PUBLISHED_PORT)/tcp \
+	--google-open-port $(RABBIT_METRICS_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_UI_PUBLISHED_PORT)/tcp --google-open-port $(KIBANA_PUBLISHED_PORT)/tcp $@
 
 prod:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
 	--google-machine-type n1-standard-1 --google-project $(GPROJECT) --google-zone europe-north1-b --google-disk-size 20 \
-	--google-open-port 9100/tcp --google-open-port 9216/tcp --google-open-port 9115/tcp --google-open-port 8080/tcp --google-open-port 8001/tcp --google-open-port 8000/tcp --google-open-port 15692/tcp --google-open-port 15672/tcp --google-open-port 5601/tcp $@
+	--google-open-port $(NODE_EXPORTER_PUBLISHED_PORT)/tcp --google-open-port $(MONGO_EXPORTER_PUBLISHED_PORT)/tcp --google-open-port $(BLACKBOX_PUBLISHED_PORT)/tcp \
+	--google-open-port $(CADVISOR_PUBLISHED_PORT)/tcp --google-open-port $(ROBOT_PUBLISHED_PORT)/tcp --google-open-port $(UI_PUBLISHED_PORT)/tcp \
+	--google-open-port $(RABBIT_METRICS_PUBLISHED_PORT)/tcp --google-open-port $(RABBIT_UI_PUBLISHED_PORT)/tcp --google-open-port $(KIBANA_PUBLISHED_PORT)/tcp $@
 
 
 # Подготавливаем конфиг prometheus перед сборкой образа, заменяем адреса dev и prod окружений на ip полученные через docker-machine
