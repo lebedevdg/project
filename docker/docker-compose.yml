@@ -14,8 +14,8 @@ services:
     image: ${PROJECTNAME}/rabbitmq:${RABBITMQ_VERSION:-latest}
     restart: always
     hostname: rabbitmq
-    volumes:
-      - rabbit:/var/lib/rabbitmq
+#    volumes:
+#      - rabbit:/var/lib/rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-guest}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-guest}
@@ -82,7 +82,7 @@ services:
 
 volumes:
   mongo:
-  rabbit:
+#  rabbit:
 
 networks:
   net:

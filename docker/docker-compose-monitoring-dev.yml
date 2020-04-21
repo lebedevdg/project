@@ -16,59 +16,6 @@ services:
       - '9090:9090'
 
 
-  node-exporter:
-    image: prom/node-exporter:v0.15.2
-    user: root
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
-    ports:
-      - '9100:9100'
-    networks:
-      net:
-
-
-  mongodb-exporter:
-    image: ${PROJECTNAME}/mongodb-exporter:${MONGODB_EXPORTER_VERSION:-latest}
-    command:
-      - '--collect.database'
-      - '--collect.collection'
-      - '--collect.topmetrics'
-      - '--collect.indexusage'
-      - '--collect.connpoolstats'
-      - '--mongodb.uri=mongodb://mongo:27017'
-    ports:
-      - '9216:9216'
-    networks:
-      net:
-
-
-  blackbox-exporter:
-    image: prom/blackbox-exporter:${BLACKBOX_EXPORTER_VERSION:-v0.16.0}
-    ports:
-      - '9115:9115'
-    networks:
-      net:
-
-
-  cadvisor:
-    image: google/cadvisor:v0.29.0
-    volumes:
-      - '/:/rootfs:ro'
-      - '/var/run:/var/run:rw'
-      - '/sys:/sys:ro'
-      - '/var/lib/docker/:/var/lib/docker:ro'
-    ports:
-      - '8080:8080'
-    networks:
-      net:
-
-
   grafana:
     image: ${PROJECTNAME}/grafana:${GRAFANA_VERSION:-latest}
     volumes:
