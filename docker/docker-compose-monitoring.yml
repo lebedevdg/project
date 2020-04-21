@@ -14,7 +14,6 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
     ports:
-#      - '9100:9100'
       - ${NODE_EXPORTER_PUBLISHED_PORT:-9100}:9100/tcp
     networks:
       net:
@@ -30,7 +29,6 @@ services:
       - '--collect.connpoolstats'
       - '--mongodb.uri=mongodb://mongo:27017'
     ports:
-#      - '9216:9216'
       - ${MONGO_EXPORTER_PUBLISHED_PORT:-9216}:9216/tcp
     networks:
       net:
@@ -40,7 +38,6 @@ services:
     image: prom/blackbox-exporter:${BLACKBOX_EXPORTER_VERSION:-v0.16.0}
     ports:
       - ${BLACKBOX_PUBLISHED_PORT:-9115}:9115/tcp
-#      - '9115:9115'
     networks:
       net:
 
