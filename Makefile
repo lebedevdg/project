@@ -19,7 +19,7 @@ PROJECTNAME = $(shell grep -Po "(?<=PROJECTNAME=)[a-z]+" $(ENV_FILE))
 # Получаем имя проекта в GCP
 GPROJECT = $(shell grep -Po "(?<=GPROJECT=).+" $(ENV_FILE))
 # ip гитлаба
-GITLAB_CI_URL = $(grep -Po "(?<=GITLAB_CI_URL=).+" $(ENV_FILE)
+GITLAB_CI_URL = $(grep -Po "(?<=GITLAB_CI_URL=).+" $(ENV_FILE))
 # Токен гитлаба
 GITLAB_CI_TOKEN = $(shell grep -Po "(?<=GITLAB_CI_TOKEN=).+" $(ENV_FILE))
 
