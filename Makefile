@@ -111,8 +111,8 @@ $(COMPOSE_COMMANDS_LOCAL_MON):
 $(COMPOSE_COMMANDS_LOCAL_MOND):
 	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-monitoring-dev.yml $(subst mond,,$(subst up,up -d,$@))
 $(COMPOSE_COMMANDS_LOCAL_GIT):
-	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-gitlab.yml $(subst git,,$(subst up,up -d,$@)) && \
-	./gitlab-ci/set_up_runner.sh $(subst git,,$@) gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
+	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-gitlab.yml $(subst git,,$(subst up,up -d,$@)) #&& \
+#	./gitlab-ci/set_up_runner.sh $(subst git,,$@) gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
 $(COMPOSE_COMMANDS_LOCAL_LOG):
 	docker-compose --env-file $(ENV_FILE) -f ./docker/docker-compose-logging.yml $(subst log,,$(subst up,up -d,$@))
 
@@ -122,8 +122,8 @@ standsup: updev upstage upprod
 # Поднимаем стек на dev
 $(COMPOSE_COMMANDS_DEV):
 	eval $$(docker-machine env dev) && echo 'Контекст переключен на dev' && docker-compose --env-file $(ENV_FILE) \
-	-f ./docker/docker-compose.yml -f ./docker/docker-compose-monitoring.yml -f ./docker/docker-compose-gitlab.yml -f ./docker/docker-compose-monitoring-dev.yml -f ./docker/docker-compose-logging.yml $(subst dev,,$(subst up,up -d,$@)) && \
-	./gitlab-ci/set_up_runner.sh $(subst dev,,$@) gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
+	-f ./docker/docker-compose.yml -f ./docker/docker-compose-monitoring.yml -f ./docker/docker-compose-gitlab.yml -f ./docker/docker-compose-monitoring-dev.yml -f ./docker/docker-compose-logging.yml $(subst dev,,$(subst up,up -d,$@)) #&& \
+	#./gitlab-ci/set_up_runner.sh $(subst dev,,$@) gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
 
 
 # Поднимаем стек на stage
