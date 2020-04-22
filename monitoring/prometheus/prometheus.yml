@@ -31,14 +31,14 @@ scrape_configs:
   - job_name: 'ui_stage'
     static_configs:
       - targets:
-        - '35.228.215.83:8000'
+        - '35.228.165.246:8000'
         labels:
           namespace: Stage
 
   - job_name: 'ui_prod'
     static_configs:
       - targets:
-        - '35.228.162.170:8000'
+        - '35.228.181.23:8000'
         labels:
           namespace: Prod
 
@@ -54,14 +54,14 @@ scrape_configs:
   - job_name: 'robot_stage'
     static_configs:
       - targets:
-        - '35.228.215.83:8001'
+        - '35.228.165.246:8001'
         labels:
           namespace: Stage
 
   - job_name: 'robot_prod'
     static_configs:
       - targets:
-        - '35.228.162.170:8001'
+        - '35.228.181.23:8001'
         labels:
           namespace: Prod
 
@@ -77,14 +77,14 @@ scrape_configs:
   - job_name: 'node_stage'
     static_configs:
       - targets:
-        - '35.228.215.83:9100'
+        - '35.228.165.246:9100'
         labels:
           namespace: Stage
 
   - job_name: 'node_prod'
     static_configs:
       - targets:
-        - '35.228.162.170:9100'
+        - '35.228.181.23:9100'
         labels:
           namespace: Prod
 
@@ -100,14 +100,14 @@ scrape_configs:
   - job_name: 'mongo_stage'
     static_configs:
       - targets:
-        - '35.228.215.83:9216'
+        - '35.228.165.246:9216'
         labels:
           namespace: Stage
 
   - job_name: 'mongo_prod'
     static_configs:
       - targets:
-        - '35.228.162.170:9216'
+        - '35.228.181.23:9216'
         labels:
           namespace: Prod
 
@@ -147,7 +147,7 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 35.228.215.83:9115  # The blackbox exporter's real urn
+        replacement: 35.228.165.246:9115  # The blackbox exporter's real urn
 
   - job_name: 'blackbox_prod'
     metrics_path: /probe
@@ -165,7 +165,7 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 35.228.162.170:9115  # The blackbox exporter's real urn
+        replacement: 35.228.181.23:9115  # The blackbox exporter's real urn
 
 ##Cadvisor##
 
@@ -179,14 +179,14 @@ scrape_configs:
   - job_name: 'cadvisor_stage'
     static_configs:
       - targets:
-        - '35.228.215.83:8080'
+        - '35.228.165.246:8080'
         labels:
           namespace: Stage
 
   - job_name: 'cadvisor_prod'
     static_configs:
       - targets:
-        - '35.228.162.170:8080'
+        - '35.228.181.23:8080'
         labels:
           namespace: Prod
 
@@ -202,14 +202,14 @@ scrape_configs:
   - job_name: 'rabbitmq_stage'
     static_configs:
       - targets:
-        - '35.228.215.83:15692'
+        - '35.228.165.246:15692'
       - labels:
           namespace: Stage
 
   - job_name: 'rabbitmq_prod'
     static_configs:
       - targets:
-        - '35.228.162.170:15692'
+        - '35.228.181.23:15692'
       - labels:
           namespace: Prod
 
