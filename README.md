@@ -45,7 +45,19 @@ dev, stage и прод
 ### Описание
 Данный проект расчитан на запуск и работу в окружении GCP - Google Cloud Platform (https://cloud.google.com/). Так же для запуска проекта на машине, с которой будет осуществляться развертывание всех окружений(управляющая машина), должны быть установлены docker, docker-compose, docker-machine.
 
-##### Документация по установке
+Т.к. сборка образов это достаточно ресурсозатратный процесс и к тому же требующий быстрого интернета, весь процесс рекомендуется производить в контекте ранее созданной машины GCP уровнем не ниже n1-standard-1 
+
+Т.е. создаем машину n1-standard-1, например так:
+
+`docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts --google-machine-type n1-standard-1 --google-project $(ID ПРОЕКТА В GCP) --google-zone europe-north1-a docker-host`
+
+После чего переключить на нее контекст
+
+`eval $(docker-machine env docker-host)`
+
+### Подготовка
+
+##### Документация по установке ПО
 Google Cloud SDK
 https://cloud.google.com/sdk/docs/
 
@@ -58,18 +70,6 @@ https://docs.docker.com/compose/install/
 Docker-machine
 https://docs.docker.com/machine/install-machine/
 
-
-Т.к. сборка образов это достаточно ресурсозатратный процесс и к тому же требующий быстрого интернета, весь процесс рекомендуется производить в контекте ранее созданной машины GCP уровнем не ниже n1-standard-1 
-
-Т.е. создаем машину n1-standard-1, например так:
-
-`docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts --google-machine-type n1-standard-1 --google-project $(ID ПРОЕКТА В GCP) --google-zone europe-north1-a docker-host`
-
-После чего переключить на нее контекст
-
-`eval $(docker-machine env docker-host)`
-
-### Подготовка
 На подготовленную (управляющую) Linux машину клонируем репозиторий:
 
 `git clone https://github.com/lebedevdg/project.git`
