@@ -88,12 +88,12 @@ https://docs.docker.com/machine/install-machine/
 
 Поднимаем всё в GCP
 
-`make allup`
+`make upall`
 
 При этом скрипт 
 создает окружения: 
 
-`make envup` 
+`make upenv` 
 
 Получает информацию по окружениям: 
 
@@ -113,7 +113,7 @@ https://docs.docker.com/machine/install-machine/
 
 Поднимает сервисы на трех окружениях dev, stage и prod: 
 
-`make standsup `
+`make uostands `
 
 (или постендно: `make updev upstage upprod`)
 
@@ -166,7 +166,7 @@ dev (служебная машина с гитлабом, прометеем, г
 его значение заносим в переменную `PROD_DOCKER_HOST_IP`
 
 После этого проводим регистрацию раннера с помощью команды: 
-`./gitlab-ci/set_up_runner.sh up gitlab-runner http://<IP_prod> A1b2C3d4E5f6G7h8I9j0`
+`make uprunner`
 
 В клоне нашего рабочего репозитория создаем какой-нибудь новый branch, например, testbranch, потом добавляем в репозиторий remote на наш Gitlab и пушим в Gitlab:
 `git checkout -b testbranch `
@@ -181,16 +181,16 @@ git push gitlab testbranch`
 
 Опускаем все:
 
-`make alldown`
+`make downall`
 
 При этом скрипт:
 Гасит приложения на всех стендах: 
 
-`make standsdown`
+`make downstands`
 (или постендно: `make downdev downstage downprod`) 
 
 Удаляет все машины GCP: 
 
-`make envdown`
+`make downenv`
 
 &copy;Dreamteam 
