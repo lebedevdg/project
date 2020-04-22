@@ -1,6 +1,6 @@
 ## OTUS Project
 
-### Участники проекта:
+### Участники проекта
 Сергей Толстинский 
 Денис Лебедев 
 Алексей Николаев
@@ -22,7 +22,7 @@ rabbitmq:15692(метрики),
 rabbitmq:15672(web) 
 kibana:5601
 
-### Порты на dev:
+### Порты на dev
 grafana:3000 
 prometheus:9090 
 alertmanager:9093 
@@ -75,7 +75,7 @@ https://docs.docker.com/machine/install-machine/
 
 Поправить веб хук и имя канала(секция slack_configs:) для отправки сообщений в Slack: monitoring/alertmanager/config.yml
 
-### Порядок сборки:
+### Порядок сборки
 
 Поднимаем всё в GCP
 
