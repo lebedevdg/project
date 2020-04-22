@@ -89,7 +89,8 @@ build_job:
     PROJECTNAME: '$DOCKER_HUB_LOGIN'
 
 .script_job: &script_template
-  image: docker:19.03.8
+#  image: docker:19.03.8
+  image: $DOCKER_HUB_LOGIN/docker-compose
   before_script:
     - mkdir -p $DOCKER_CERT_PATH
     - echo "$DOCKER_HOST_CA_FILE" > $DOCKER_CERT_PATH/ca.pem
@@ -102,8 +103,8 @@ build_job:
     - docker info
     - docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASSWORD
 
-    - apk add py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
-    - pip install docker-compose
+#    - apk add py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
+#    - pip install docker-compose
     - docker-compose --version
 
     - docker ps -as
