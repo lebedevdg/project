@@ -13,7 +13,7 @@ services:
     networks:
       net:
     ports:
-      - '9090:9090'
+      - ${PROMETHEUS_PUBLISHED_PORT:-9090}:9090/tcp
 
 
   grafana:
@@ -26,7 +26,7 @@ services:
     depends_on:
       - prometheus
     ports:
-      - 3000:3000
+      - ${GRAFANA_PUBLISHED_PORT:-3000}:3000/tcp
     networks:
       net:
 
@@ -37,7 +37,7 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
     ports:
-      - 9093:9093
+      - ${ALERTMANAGER_PUBLISHED_PORT:-9093}:9093/tcp
     networks:
       net:
 
