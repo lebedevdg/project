@@ -113,7 +113,7 @@ https://docs.docker.com/machine/install-machine/
 
 Поднимает сервисы на трех окружениях dev, stage и prod: 
 
-`make uostands `
+`make upstands `
 
 (или постендно: `make updev upstage upprod`)
 
