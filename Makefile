@@ -55,7 +55,7 @@ upenv: $(ENVIRONMENT)
 
 # Удаляем все машины GCP
 downenv:
-	docker-machine rm -y $(ENVIRONMENT)
+	docker-machine rm -f -y $(ENVIRONMENT)
 
 dev:
 	docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts \
@@ -168,8 +168,6 @@ downrunnerlocal:
 uprunner:
 	eval $$(docker-machine env dev) && echo 'Контекст переключен на dev' && ./gitlab-ci/set_up_runner.sh up gitlab-runner $(GITLAB_CI_URL) $(GITLAB_CI_TOKEN)
 
-
-	docker-machine rm -f -y $(ENVIRONMENT)
 # Разрегистрировать runner на dev и удалить runner из гитлаб
 downrunner:
 	eval $$(docker-machine env dev) && echo 'Контекст переключен на dev' && ./gitlab-ci/set_up_runner.sh down gitlab-runner
