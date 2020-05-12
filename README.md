@@ -2,6 +2,16 @@
 
 ### Содержание
 + [Участники проекта](#1)
++ [О чем этот проект](#2)
++ [Roadmap проекта](#3)
++ [Environments](#4)
++ [Порты на stage и prod](#5)
++ [Порты на dev](#6)
++ [Описание](#7)
++ [Подготовка к развертыванию](#8)
++ [Порядок сборки](#9)
++ [Настройка пайплайнов в GitLab](#10)
++ [Список функций Makefile](#11)
 
 ### Участники проекта
 <a name="1"></a>
@@ -10,10 +20,12 @@
 - [Алексей Николаев](https://github.com/nightdiverru "Алексей Николаев")
 
 ### О чем этот проект
+<a name="2"></a>
 Реализован деплой бота [Robot](https://github.com/express42/search_engine_crawler "Robot") , [UI](https://github.com/express42/search_engine_ui "UI") для него и вспомогательных приложений (RabbitMQ, mongodb etc), а также систем мониторинга, алертинга и логирования в облако GCP. Сборка и тестирование в Gitlab pipelines
 
 
 ### Roadmap проекта
+<a name="3"></a>
 - [x] Используются ресурсы Google Coud Platform
 - [x] Создание репозитория, добавление участников, инициализация коммита, создание Readme, changelog, precommit и прочее
 - [x] Клонирование репозитория с кодом приложения Robot
@@ -37,9 +49,11 @@
 
 
 ### Environments
+<a name="4"></a>
 dev, stage и прод
 
 ### Порты на stage и prod
+<a name="5"></a>
 - node-exporter:9100 
 - mongodb-exporter:9216 
 - blackbox-exporter:9115 
@@ -51,6 +65,7 @@ dev, stage и прод
 - kibana:5601
 
 ### Порты на dev
+<a name="6"></a>
 - grafana:3000 
 - prometheus:9090 
 - alertmanager:9093 
@@ -62,6 +77,7 @@ dev, stage и прод
 - kibana:5601
 
 ### Описание
+<a name="7"></a>
 Данный проект расчитан на запуск и работу в окружении GCP - Google Cloud Platform (https://cloud.google.com/). Так же для запуска проекта на машине, с которой будет осуществляться развертывание всех окружений(управляющая машина), должны быть установлены docker, docker-compose, docker-machine.
 
 Т.к. сборка образов это достаточно ресурсозатратный процесс и к тому же требующий быстрого интернета, весь процесс рекомендуется производить в контекте ранее созданной машины GCP уровнем не ниже n1-standard-1 
@@ -76,7 +92,8 @@ dev, stage и прод
 
 [![Схема развертывания](https://i.ibb.co/jg2hQ9n/Deploy-Diagram.png "Схема развертывания")](https://i.ibb.co/jg2hQ9n/Deploy-Diagram.png "Схема развертывания")
 
-### Подготовка
+### Подготовка к развертыванию
+<a name="8"></a>
 
 ##### Документация по установке ПО
 Google Cloud SDK
@@ -107,7 +124,7 @@ https://docs.docker.com/machine/install-machine/
 
 
 ### Порядок сборки
-
+<a name="9"></a>
 Поднимаем всё в GCP
 
 `make upall`
@@ -146,7 +163,7 @@ dev (служебная машина с гитлабом, прометеем, г
 
 
 ### Настройка пайплайнов в GitLab
-
+<a name="10"></a>
 ##### Первичная настройка
 
 Заходим в Gitlab по адресу http://<docker-host_external_IP> под пользователем root и паролем, который был задан ранее в ./docker/.env файле.
@@ -218,7 +235,7 @@ git push gitlab testbranch`
 `make downenv`
 
 ### Список функций Makefile
-
+<a name="11"></a>
 #### Поднять все сразу
 
 `make upall`
