@@ -116,7 +116,7 @@ https://docs.docker.com/machine/install-machine/
 
 `cp .env.example .env`
 
-Заполняем переменные внутри .env файла согласно комментариям внутри файла. Дополнительно экспортируем в окружение системы переменную `DOCKER_HUB_PASSWORD`, она понадобится для автоматической выгрузки образов в докер хаб
+Заполняем переменные внутри .env файла согласно комментариям внутри файла. Дополнительно экспортируем в окружение системы переменную `DOCKER_HUB_PASSWORD`, она понадобится для автоматической выгрузки образов в докер хаб:
 
 `export DOCKER_HUB_PASSWORD=пароль `
 
@@ -315,7 +315,7 @@ https://docs.docker.com/machine/install-machine/
 
 `make downlocal`
 
-включает в себя:
+команда включает в себя:
 - погасить стек с mongo, rabbit, robot, ui, fluentd<br/>
   `make down`
 
@@ -338,6 +338,7 @@ https://docs.docker.com/machine/install-machine/
 #### Разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении
 
 `make downrunnerlocal`
+
 
 
 &copy;Dreamteam
