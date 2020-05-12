@@ -57,6 +57,8 @@ dev, stage и прод
 
 `eval $(docker-machine env docker-host)`
 
+[![Схема развертывания](https://i.ibb.co/jg2hQ9n/Deploy-Diagram.png "Схема развертывания")](https://i.ibb.co/jg2hQ9n/Deploy-Diagram.png "Схема развертывания")
+
 ### Подготовка
 
 ##### Документация по установке ПО
