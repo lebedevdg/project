@@ -213,9 +213,9 @@ git push gitlab testbranch`
 
 `make downenv`
 
-###Список функций Makefile
+### Список функций Makefile
 
-####поднять все сразу
+#### Поднять все сразу
 
 `make upall`
 
@@ -271,7 +271,7 @@ git push gitlab testbranch`
    *  на prod поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
    `make upprod`
 
-####погасить весь деплой и удалить GCP машины
+#### Погасить весь деплой и удалить GCP машины
 
 `make downall`
 
@@ -290,20 +290,20 @@ git push gitlab testbranch`
  *  удалить GCP машины dev, stage и prod
    ` make downenv`
 
-####получить информацию для настройки гитлаба для подключения к docker engine стендов
+#### Получить информацию для настройки гитлаба для подключения к docker engine стендов
 
 `make info`
 
-#### поднять runner на dev и зарегистрировать runner в гитлаб
+#### Поднять runner на dev и зарегистрировать runner в гитлаб
 
 `make uprunner`
 
-#### разрегистрировать runner на dev и удалить runner из гитлаб
+#### Разрегистрировать runner на dev и удалить runner из гитлаб
 
 `make downrunner`
 
 
-#### поднять на текущем docker окружении весь стек разом
+#### Поднять на текущем docker окружении весь стек разом
 
 `make uplocal`
 
@@ -320,7 +320,7 @@ git push gitlab testbranch`
 +  поднять стек с elasticsearch, kibana
 `    `make uplog`
 
-#### погасить на текущем docker окружении весь стек разом
+#### Погасить на текущем docker окружении весь стек разом
 
 `make downlocal`
 
@@ -337,11 +337,11 @@ git push gitlab testbranch`
 +  погасить стек с elasticsearch, kibana
 `    make downlog`
 
-#### поднять runner на текущем docker окружении и зарегистрировать runner в гитлаб
+#### Поднять runner на текущем docker окружении и зарегистрировать runner в гитлаб
 
 `make uprunnerlocal`
 
-#### разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении
+#### Разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении
 
 `make downrunnerlocal`
 
