@@ -15,13 +15,13 @@
 
 ### Участники проекта
 <a name="1"></a>
-- [Сергей Толстинский ](https://github.com/sergetol "Сергей Толстинский ")
-- [Денис Лебедев](https://github.com/lebedevdg "Денис Лебедев") 
+- [Сергей Толстинский](https://github.com/sergetol "Сергей Толстинский")
+- [Денис Лебедев](https://github.com/lebedevdg "Денис Лебедев")
 - [Алексей Николаев](https://github.com/nightdiverru "Алексей Николаев")
 
 ### О чем этот проект
 <a name="2"></a>
-Реализован деплой бота [Robot](https://github.com/express42/search_engine_crawler "Robot") , [UI](https://github.com/express42/search_engine_ui "UI") для него и вспомогательных приложений (RabbitMQ, mongodb etc), а также систем мониторинга, алертинга и логирования в облако GCP. Сборка и тестирование в Gitlab pipelines
+Реализован деплой бота [Robot](https://github.com/express42/search_engine_crawler "Robot"), [UI](https://github.com/express42/search_engine_ui "UI") для него и вспомогательных приложений (RabbitMQ, MongoDB), а также систем мониторинга, алертинга и логирования в облако GCP. Сборка и тестирование в GitLab CI pipeline
 
 
 ### Roadmap проекта
@@ -31,7 +31,7 @@
 - [x] Клонирование репозитория с кодом приложения Robot
 - [x] Подготовка докер файлов и тестовые сборки
 - [x] Оптимизация докер файлов
-- [x] Тестовый деплой инфраструктуры на одной машине с сопряжением компонентов.
+- [x] Тестовый деплой инфраструктуры на одной машине с сопряжением компонентов
 - [x] Создание Makefile для сборки и деплоя приложений и окружения
 - [x] Настройка мониторинга
 - [x] Настройка аллертинга и ChatOps
@@ -50,43 +50,43 @@
 
 ### Environments
 <a name="4"></a>
-dev, stage и прод
+dev, stage и prod
 
 ### Порты на stage и prod
 <a name="5"></a>
-- node-exporter:9100 
-- mongodb-exporter:9216 
-- blackbox-exporter:9115 
-- cadvisor:8080 
-- robot:8001 
-- ui:8000 
-- rabbitmq:15692(метрики), 
-- rabbitmq:15672(web) 
+- node-exporter:9100
+- mongodb-exporter:9216
+- blackbox-exporter:9115
+- cadvisor:8080
+- robot:8001
+- ui:8000
+- rabbitmq:15692 (метрики)
+- rabbitmq:15672 (web)
 - kibana:5601
 
 ### Порты на dev
 <a name="6"></a>
-- grafana:3000 
-- prometheus:9090 
-- alertmanager:9093 
+- grafana:3000
+- prometheus:9090
+- alertmanager:9093
 - gitlabci:80
-- ui:8000 
-- cadvisor:8080 
-- rabbitmq:15692(метрики), 
-- rabbitmq:15672(web) 
+- ui:8000
+- cadvisor:8080
+- rabbitmq:15692 (метрики)
+- rabbitmq:15672 (web)
 - kibana:5601
 
 ### Описание
 <a name="7"></a>
-Данный проект расчитан на запуск и работу в окружении GCP - Google Cloud Platform (https://cloud.google.com/). Так же для запуска проекта на машине, с которой будет осуществляться развертывание всех окружений(управляющая машина), должны быть установлены docker, docker-compose, docker-machine.
+Данный проект расчитан на запуск и работу в окружении GCP - Google Cloud Platform (https://cloud.google.com/). Так же для запуска проекта на машине, с которой будет осуществляться развертывание всех окружений (управляющая машина), должны быть установлены docker, docker-compose, docker-machine
 
-Т.к. сборка образов это достаточно ресурсозатратный процесс и к тому же требующий быстрого интернета, весь процесс рекомендуется производить в контекте ранее созданной машины GCP уровнем не ниже n1-standard-1 
+Т.к. сборка образов это достаточно ресурсозатратный процесс и к тому же требующий быстрого интернета, весь процесс рекомендуется производить в контекте ранее созданной машины GCP уровнем не ниже n1-standard-1
 
 Т.е. создаем машину n1-standard-1, например так:
 
 `docker-machine create --driver google --google-machine-image https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts --google-machine-type n1-standard-1 --google-project $(ID ПРОЕКТА В GCP) --google-zone europe-north1-a docker-host`
 
-После чего переключить на нее контекст
+После чего переключаем на нее контекст:
 
 `eval $(docker-machine env docker-host)`
 
@@ -96,16 +96,16 @@ dev, stage и прод
 <a name="8"></a>
 
 ##### Документация по установке ПО
-Google Cloud SDK
+Google Cloud SDK:
 https://cloud.google.com/sdk/docs/
 
-Docker
+Docker:
 https://docs.docker.com/engine/install/
 
 Docker-compose:
 https://docs.docker.com/compose/install/
 
-Docker-machine
+Docker-machine:
 https://docs.docker.com/machine/install-machine/
 
 На подготовленную (управляющую) Linux машину клонируем репозиторий:
@@ -116,11 +116,11 @@ https://docs.docker.com/machine/install-machine/
 
 `cp .env.example .env`
 
-Заполняем переменные внутри .env файла согласно комментариям внутри файла Дополнительно экспортируем в окружение системы переменную `DOCKER_HUB_PASSWORD`, она понадобится для автоматической выгрузки образов в докер хаб.
+Заполняем переменные внутри .env файла согласно комментариям внутри файла. Дополнительно экспортируем в окружение системы переменную `DOCKER_HUB_PASSWORD`, она понадобится для автоматической выгрузки образов в докер хаб
 
 `export DOCKER_HUB_PASSWORD=пароль `
 
-Поправить веб хук и имя канала(секция slack_configs:) для отправки сообщений в Slack: monitoring/alertmanager/config.yml
+Поправим веб хук и имя канала (секция slack_configs) для отправки сообщений в Slack: monitoring/alertmanager/config.yml
 
 
 ### Порядок сборки
@@ -131,42 +131,41 @@ https://docs.docker.com/machine/install-machine/
 
 Описание команды см в: [Список функций Makefile](#11)
 
-После чего мы имеем 3 стенда в GCP: 
-dev (служебная машина с гитлабом, прометеем, графаной, аллертменеджером и т.д), stage и prod стенды, содержащие только экспортеры и уже задеплоенные приложения и ожидающие возможного деплоя со стороны гитлаба
+После чего мы имеем 3 стенда в GCP: dev (служебная машина с гитлабом, прометеем, графаной, аллертменеджером и т.д), stage и prod стенды, содержащие только экспортеры и уже задеплоенные приложения и ожидающие возможного деплоя со стороны гитлаба
 
-Сразу после применения make стенды готовы и работают, можно посмотреть как все устроено, зайдя в графану или кибану, но для полноценной работы CI/CD требуется минимальная ручная донастройка GitLab.
+Сразу после выполнения `make upall` стенды готовы и работают, можно посмотреть, как все устроено, зайдя в графану или кибану, но для полноценной работы CI/CD требуется минимальная ручная донастройка GitLab
 
 
 ### Настройка пайплайнов в GitLab
 <a name="10"></a>
 ##### Первичная настройка
 
-Заходим в Gitlab по адресу http://<docker-host_external_IP> под пользователем root и паролем, который был задан ранее в ./docker/.env файле.
+Заходим в Gitlab по адресу http://<docker-host_external_IP> под пользователем root и паролем, который был задан ранее в ./docker/.env файле
 
-В Admin Area идем в Settings, там выбираем Users->Features->Sign-Up->Sign-up restrictions, выключаем Sign-up enabled и делаем Save changes.
+В Admin Area идем в Settings, там выбираем Users->Features->Sign-Up->Sign-up restrictions, выключаем Sign-up enabled и делаем Save changes
 
-Далее в Groups создаем новую Group, например, otus, а в ней новый blank Project, например, project.
+Далее в Groups создаем новую Group, например, otus, а в ней новый blank Project, например, project
 
-В Project, который мы создали, в Settings -> Integrations -> Slack notifications добавляем Webhook из предварительно добавленного в нужный канал Slack приложения Incoming WebHooks.
+В Project, который мы создали, в Settings -> Integrations -> Slack notifications добавляем Webhook из предварительно добавленного в нужный канал Slack приложения Incoming WebHooks
 
 
 ##### Добавление переменных в проект GitLab
 
-Также в проекте в Settings -> CI / CD -> Variables добавляем переменные `DOCKER_HUB_LOGIN` и `DOCKER_HUB_PASSWORD` (для этой включить Masked) это нужно, соответственно, для загрузки собранных image на Docker Hub на нашей управляющей машине. 
+Также в проекте в Settings -> CI / CD -> Variables добавляем переменные `DOCKER_HUB_LOGIN` и `DOCKER_HUB_PASSWORD` (для этой включить Masked) это нужно, соответственно, для загрузки собранных image на Docker Hub на нашей управляющей машине
 
-Выполняем для dev машины (это та, на которой развернут GitLab CI) 
+Выполняем для dev машины (это та, на которой развернут GitLab CI)
 
 `docker-machine config dev`
 
-видим пути к трем файлам: ca.pem, cert.pem, key.pem 
+видим пути к трем файлам: ca.pem, cert.pem, key.pem
 
-Добавляем переменные `DEV_DOCKER_HOST_CA_FILE`, `DEV_DOCKER_HOST_CERT_FILE`, `DEV_DOCKER_HOST_KEY_FILE` со значениями, равными содержимому, соответственно, наших трех файлов: ca.pem, cert.pem, key.pem. 
+Добавляем переменные `DEV_DOCKER_HOST_CA_FILE`, `DEV_DOCKER_HOST_CERT_FILE`, `DEV_DOCKER_HOST_KEY_FILE` со значениями, равными содержимому, соответственно, наших трех файлов: ca.pem, cert.pem, key.pem
 
-Теперь то же самое делаем для stage машины: 
+Теперь то же самое делаем для stage машины:
 
 `docker-machine config stage`
 
-Заполняем соответственно переменные `STAGE_DOCKER_HOST_CA_FILE`, `STAGE_DOCKER_HOST_CERT_FILE`, `STAGE_DOCKER_HOST_KEY_FILE`, также нам понадобится IP адрес машины: 
+Заполняем соответственно переменные `STAGE_DOCKER_HOST_CA_FILE`, `STAGE_DOCKER_HOST_CERT_FILE`, `STAGE_DOCKER_HOST_KEY_FILE`, также нам понадобится IP адрес машины:
 
 `docker-machine ip stage`
 
@@ -174,26 +173,31 @@ dev (служебная машина с гитлабом, прометеем, г
 
 `docker-machine config prod`
 
-Заполняем соответственно переменные `PROD_DOCKER_HOST_CA_FILE`, `PROD_DOCKER_HOST_CERT_FILE`, `PROD_DOCKER_HOST_KEY_FILE`,
-получаем IP адрес машины: 
+Заполняем соответственно переменные `PROD_DOCKER_HOST_CA_FILE`, `PROD_DOCKER_HOST_CERT_FILE`, `PROD_DOCKER_HOST_KEY_FILE`, получаем IP адрес машины:
 
 `docker-machine ip prod`
 
 его значение заносим в переменную `PROD_DOCKER_HOST_IP`
 
-После этого проводим регистрацию раннера с помощью команды: 
+После этого проводим регистрацию раннера с помощью команды:
+
 `make uprunner`
 
-В клоне нашего рабочего репозитория создаем какой-нибудь новый branch, например, testbranch, потом добавляем в репозиторий remote на наш Gitlab и пушим в Gitlab:  
-`git checkout -b testbranch`   
-`git remote add gitlab http://<dockerhost_external_IP>/<your_group>/<your_project>.git`  
-`git push gitlab testbranch`  
+В клоне нашего рабочего репозитория создаем какой-нибудь новый branch, например, testbranch, потом добавляем в репозиторий remote на наш Gitlab и пушим в Gitlab:
 
-Проверяем в Gitlab состояние запустившегося pipeline в Project, который мы создали, в CI / CD -> Pipelines.
-Проверяем также в нашем канале Slack, что туда приходят оповещения от Gitlab, затем заходим по адресу нашего environment http://<docker-host_external_IP>:8000 и убеждаемся, что собранное и задеплоенное приложение работает корректно.
+`git checkout -b testbranch`
+
+`git remote add gitlab http://<dockerhost_external_IP>/<your_group>/<your_project>.git`
+
+`git push gitlab testbranch`
+
+Проверяем в Gitlab состояние запустившегося pipeline в Project, который мы создали, в CI / CD -> Pipelines
+Проверяем также в нашем канале Slack, что туда приходят оповещения от Gitlab, затем заходим по адресу нашего environment http://<docker-host_external_IP>:8000 и убеждаемся, что собранное и задеплоенное приложение работает корректно
+
 Если добавить какой-нибудь тэг, то можно будет по кнопке задеплоить приложение на окружения stage и prod:
 
-`git tag 1.2.3`  
+`git tag 1.2.3`
+
 `git push gitlab testbranch --tags`
 
 ### Опускаем все:
@@ -204,135 +208,136 @@ dev (служебная машина с гитлабом, прометеем, г
 
 ### Список функций Makefile
 <a name="11"></a>
-#### Поднять все сразу  
+#### Поднять все сразу
 
-`make upall`  
+`make upall`
 
- команда включает в себя:
- +  создать GCP машины  
-   ` make upenv`
-   
-     включает в себя:
-     *  создать через docker-machine GCP машину dev (n1-standard-2, 50Gb disk)  
- `make dev`
-     *  создать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)  
- `make stage`
-     *  cоздать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)  
- `make prod`
+команда включает в себя:
+- создать GCP машины
+  `make upenv`
+  команда включает в себя:
+  - создать через docker-machine GCP машину dev (n1-standard-2, 50Gb disk)
+    `make dev`
+  - создать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)
+    `make stage`
+  - cоздать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)
+    `make prod`
 
-+  подготовить конфиг prometheus перед сборкой образа, заменить IP адреса stage и prod окружений  
-`make prepare`
+- подготовить конфиг prometheus перед сборкой образа, заменить IP адреса stage и prod окружений
+  `make prepare`
 
-+  собрать все образы в текущем docker окружении  
- `make build`
- 
-    включает в себя:
-  *  собрать образ ui  
- `make ui`
-  *  собрать образ robot  
- `make robot`
-  *  собрать образ prometheus  
- `make prometheus`
-  *  собрать образ mongodb-exporter  
-`make mongodb-exporter`
-  *  собрать образ alertmanager  
-`make alertmanager`
- *  собрать образ grafana  
-`make grafana`
- *  собрать образ rabbitmq  
- `make rabbitmq`
-  *  собрать образ fluentd  
-`make fluentd`
- *  собрать образ на основе docker с установленным docker-compose (используется в гитлаб)  
-`make docker-compose`
+- собрать все образы в текущем docker окружении
+  `make build`
+  команда включает в себя:
+  - собрать образ ui
+    `make ui`
+  - собрать образ robot
+    `make robot`
+  - собрать образ prometheus
+    `make prometheus`
+  - собрать образ mongodb-exporter
+    `make mongodb-exporter`
+  - собрать образ alertmanager
+    `make alertmanager`
+  - собрать образ grafana
+    `make grafana`
+  - собрать образ rabbitmq
+    `make rabbitmq`
+  - собрать образ fluentd
+    `make fluentd`
+  - собрать образ на основе docker с установленным docker-compose (используется в гитлаб)
+    `make docker-compose`
 
-+  запушить все собранные образы в докер хаб  
- `make push`
- 
-+  поднять стек на всех стендах разом  
-` make upstands`
+- запушить все собранные образы в докер хаб
+  `make push`
 
-    включает в себя:
-   *  на dev поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana  
-`make updev`
-   *  на stage поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana  
-` make upstage`
-   *  на prod поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana  
-   `make upprod`
+- поднять стек на всех стендах разом
+  `make upstands`
+  команда включает в себя:
+  - на dev поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana
+    `make updev`
+  - на stage поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+    `make upstage`
+  - на prod поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+    `make upprod`
 
-#### Погасить весь деплой и удалить GCP машины  
+#### Погасить весь деплой и удалить GCP машины
 
 `make downall`
 
- включает в себя:
- 
-+   погасить стек на всех стендах разом  
+команда включает в себя:
+- погасить стек на всех стендах разом
   `make downstands`
-  
-    включает в себя:
-   *  на dev погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana  
-   `     make downdev`
-  *  на stage погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana  
-   `make downstage`
-  *  на prod погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana  
-   `make downprod`
- *  удалить GCP машины dev, stage и prod  
-   ` make downenv`
+  команда включает в себя:
+  - на dev погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana
+    `make downdev`
+  - на stage погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+    `make downstage`
+  - на prod погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+    `make downprod`
 
-#### Получить информацию для настройки гитлаба для подключения к docker engine стендов  
+- удалить GCP машины dev, stage и prod
+  `make downenv`
+
+#### Получить информацию для настройки гитлаба для подключения к docker engine стендов
 
 `make info`
 
-#### Поднять runner на dev и зарегистрировать runner в гитлаб  
+#### Поднять runner на dev и зарегистрировать runner в гитлаб
 
 `make uprunner`
 
-#### Разрегистрировать runner на dev и удалить runner из гитлаб  
+#### Разрегистрировать runner на dev и удалить runner из гитлаб
 
 `make downrunner`
 
-
-#### Поднять на текущем docker окружении весь стек разом  
+#### Поднять на текущем docker окружении весь стек разом
 
 `make uplocal`
 
-включает в себя:
+команда включает в себя:
+- поднять стек с mongo, rabbit, robot, ui, fluentd
+  `make up`
 
-+  поднять стек с mongo, rabbit, robot, ui, fluentd  
-    `make up`
-+  поднять стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor  
-    `make upmon`
-+  поднять стек с prometheus, grafana, alertmanager  
-    `make upmond`
-+  поднять стек с gitlab  
-    `make upgit`
-+  поднять стек с elasticsearch, kibana  
-    `make uplog`
+- поднять стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor
+  `make upmon`
 
-#### Погасить на текущем docker окружении весь стек разом  
+- поднять стек с prometheus, grafana, alertmanager
+  `make upmond`
+
+- поднять стек с gitlab
+  `make upgit`
+
+- поднять стек с elasticsearch, kibana
+  `make uplog`
+
+#### Погасить на текущем docker окружении весь стек разом
 
 `make downlocal`
 
 включает в себя:
+- погасить стек с mongo, rabbit, robot, ui, fluentd
+  `make down`
 
-+  погасить стек с mongo, rabbit, robot, ui, fluentd  
- `   make down`
-+  погасить стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor  
-   ` make downmon`
-+  погасить стек с prometheus, grafana, alertmanager  
-   ` make downmond`
-+  погасить стек с gitlab  
-`    make downgit`
-+  погасить стек с elasticsearch, kibana  
-`    make downlog`
+- погасить стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor
+  `make downmon`
 
-#### Поднять runner на текущем docker окружении и зарегистрировать runner в гитлаб  
+- погасить стек с prometheus, grafana, alertmanager
+  `make downmond`
+
+- погасить стек с gitlab
+  `make downgit`
+
+- погасить стек с elasticsearch, kibana
+  `make downlog`
+
+#### Поднять runner на текущем docker окружении и зарегистрировать runner в гитлаб
 
 `make uprunnerlocal`
 
-#### Разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении  
+#### Разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении
 
 `make downrunnerlocal`
 
 
-&copy;Dreamteam 
+&copy;Dreamteam
