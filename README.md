@@ -184,7 +184,7 @@ dev (служебная машина с гитлабом, прометеем, г
 После этого проводим регистрацию раннера с помощью команды: 
 `make uprunner`
 
-В клоне нашего рабочего репозитория создаем какой-нибудь новый branch, например, testbranch, потом добавляем в репозиторий remote на наш Gitlab и пушим в Gitlab:
+В клоне нашего рабочего репозитория создаем какой-нибудь новый branch, например, testbranch, потом добавляем в репозиторий remote на наш Gitlab и пушим в Gitlab:  
 `git checkout -b testbranch`   
 `git remote add gitlab http://<dockerhost_external_IP>/<your_group>/<your_project>.git`  
 `git push gitlab testbranch`  
