@@ -196,7 +196,7 @@ dev (служебная машина с гитлабом, прометеем, г
 `git tag 1.2.3`  
 `git push gitlab testbranch --tags`
 
-Опускаем все:
+### Опускаем все:
 
 `make downall`
 
