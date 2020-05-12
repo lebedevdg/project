@@ -214,6 +214,7 @@ git push gitlab testbranch`
 `make downenv`
 
 ###Список функций Makefile
+
 ####поднять все сразу
 `make upall`
 
