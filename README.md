@@ -6,7 +6,7 @@
 - [Алексей Николаев](https://github.com/nightdiverru "Алексей Николаев")
 
 ### О чем этот проект
-Реализован деплой бота [Robot](https://github.com/express42/search_engine_crawler "Robot") , [UI](https://github.com/express42/search_engine_ui "UI") для него и вспомогательных приложений (RabbitMQ, mongodb etc), а также систем мониторинга, логирования и алертинга в облако GCP. Сборка и тестирование в Gitlab pipelines
+Реализован деплой бота [Robot](https://github.com/express42/search_engine_crawler "Robot") , [UI](https://github.com/express42/search_engine_ui "UI") для него и вспомогательных приложений (RabbitMQ, mongodb etc), а также систем мониторинга, алертинга и логирования в облако GCP. Сборка и тестирование в Gitlab pipelines
 
 
 ### Roadmap проекта
@@ -101,6 +101,7 @@ https://docs.docker.com/machine/install-machine/
 
 Поправить веб хук и имя канала(секция slack_configs:) для отправки сообщений в Slack: monitoring/alertmanager/config.yml
 
+
 ### Порядок сборки
 
 Поднимаем всё в GCP
@@ -139,6 +140,7 @@ dev (служебная машина с гитлабом, прометеем, г
 
 Сразу после применения make стенды готовы и работают, можно посмотреть как все устроено, зайдя в графану или кибану, но для полноценной работы CI/CD требуется минимальная ручная донастройка GitLab.
 
+
 ### Настройка пайплайнов в GitLab
 
 ##### Первичная настройка
@@ -150,6 +152,7 @@ dev (служебная машина с гитлабом, прометеем, г
 Далее в Groups создаем новую Group, например, otus, а в ней новый blank Project, например, project.
 
 В Project, который мы создали, в Settings -> Integrations -> Slack notifications добавляем Webhook из предварительно добавленного в нужный канал Slack приложения Incoming WebHooks.
+
 
 ##### Добавление переменных в проект GitLab
 
