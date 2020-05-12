@@ -236,133 +236,133 @@ git push gitlab testbranch`
 
 ### Список функций Makefile
 <a name="11"></a>
-#### Поднять все сразу
+#### Поднять все сразу  
 
-`make upall`
+`make upall`  
 
  команда включает в себя:
- +  создать GCP машины
+ +  создать GCP машины  
    ` make upenv`
    
      включает в себя:
-     *  создать через docker-machine GCP машину dev (n1-standard-2, 50Gb disk)
+     *  создать через docker-machine GCP машину dev (n1-standard-2, 50Gb disk)  
  `make dev`
-     *  создать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)
+     *  создать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)  
  `make stage`
-     *  cоздать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)
+     *  cоздать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)  
  `make prod`
 
-+  подготовить конфиг prometheus перед сборкой образа, заменить IP адреса stage и prod окружений
++  подготовить конфиг prometheus перед сборкой образа, заменить IP адреса stage и prod окружений  
 `make prepare`
 
-+  собрать все образы в текущем docker окружении
++  собрать все образы в текущем docker окружении  
  `make build`
  
     включает в себя:
-  *  собрать образ ui
+  *  собрать образ ui  
  `make ui`
-  *  собрать образ robot
+  *  собрать образ robot  
  `make robot`
-  *  собрать образ prometheus
+  *  собрать образ prometheus  
  `make prometheus`
-  *  собрать образ mongodb-exporter
+  *  собрать образ mongodb-exporter  
 `make mongodb-exporter`
-  *  собрать образ alertmanager
+  *  собрать образ alertmanager  
 `make alertmanager`
- *  собрать образ grafana
+ *  собрать образ grafana  
 `make grafana`
- *  собрать образ rabbitmq
+ *  собрать образ rabbitmq  
  `make rabbitmq`
-  *  собрать образ fluentd
+  *  собрать образ fluentd  
 `make fluentd`
- *  собрать образ на основе docker с установленным docker-compose (используется в гитлаб)
+ *  собрать образ на основе docker с установленным docker-compose (используется в гитлаб)  
 `make docker-compose`
 
-+  запушить все собранные образы в докер хаб
++  запушить все собранные образы в докер хаб  
  `make push`
  
-+  поднять стек на всех стендах разом
++  поднять стек на всех стендах разом  
 ` make upstands`
 
     включает в себя:
-   *  на dev поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana
+   *  на dev поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana  
 `make updev`
-   *  на stage поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+   *  на stage поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana  
 ` make upstage`
-   *  на prod поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+   *  на prod поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana  
    `make upprod`
 
-#### Погасить весь деплой и удалить GCP машины
+#### Погасить весь деплой и удалить GCP машины  
 
 `make downall`
 
  включает в себя:
  
-+   погасить стек на всех стендах разом
++   погасить стек на всех стендах разом  
   `make downstands`
   
     включает в себя:
-   *  на dev погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana
+   *  на dev погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana  
    `     make downdev`
-  *  на stage погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+  *  на stage погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana  
    `make downstage`
-  *  на prod погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+  *  на prod погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana  
    `make downprod`
- *  удалить GCP машины dev, stage и prod
+ *  удалить GCP машины dev, stage и prod  
    ` make downenv`
 
-#### Получить информацию для настройки гитлаба для подключения к docker engine стендов
+#### Получить информацию для настройки гитлаба для подключения к docker engine стендов  
 
 `make info`
 
-#### Поднять runner на dev и зарегистрировать runner в гитлаб
+#### Поднять runner на dev и зарегистрировать runner в гитлаб  
 
 `make uprunner`
 
-#### Разрегистрировать runner на dev и удалить runner из гитлаб
+#### Разрегистрировать runner на dev и удалить runner из гитлаб  
 
 `make downrunner`
 
 
-#### Поднять на текущем docker окружении весь стек разом
+#### Поднять на текущем docker окружении весь стек разом  
 
 `make uplocal`
 
 включает в себя:
 
-+  поднять стек с mongo, rabbit, robot, ui, fluentd
++  поднять стек с mongo, rabbit, robot, ui, fluentd  
 `    `make up`
-+  поднять стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor
++  поднять стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor  
 `    `make upmon`
-+  поднять стек с prometheus, grafana, alertmanager
++  поднять стек с prometheus, grafana, alertmanager  
 `    `make upmond`
-+  поднять стек с gitlab
++  поднять стек с gitlab  
 `    `make upgit`
-+  поднять стек с elasticsearch, kibana
++  поднять стек с elasticsearch, kibana  
 `    `make uplog`
 
-#### Погасить на текущем docker окружении весь стек разом
+#### Погасить на текущем docker окружении весь стек разом  
 
 `make downlocal`
 
 включает в себя:
 
-+  погасить стек с mongo, rabbit, robot, ui, fluentd
++  погасить стек с mongo, rabbit, robot, ui, fluentd  
  `   make down`
-+  погасить стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor
++  погасить стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor  
    ` make downmon`
-+  погасить стек с prometheus, grafana, alertmanager
++  погасить стек с prometheus, grafana, alertmanager  
    ` make downmond`
-+  погасить стек с gitlab
++  погасить стек с gitlab  
 `    make downgit`
-+  погасить стек с elasticsearch, kibana
++  погасить стек с elasticsearch, kibana  
 `    make downlog`
 
-#### Поднять runner на текущем docker окружении и зарегистрировать runner в гитлаб
+#### Поднять runner на текущем docker окружении и зарегистрировать runner в гитлаб  
 
 `make uprunnerlocal`
 
-#### Разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении
+#### Разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении  
 
 `make downrunnerlocal`
 
