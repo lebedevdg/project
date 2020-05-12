@@ -185,8 +185,8 @@ dev (служебная машина с гитлабом, прометеем, г
 `make uprunner`
 
 В клоне нашего рабочего репозитория создаем какой-нибудь новый branch, например, testbranch, потом добавляем в репозиторий remote на наш Gitlab и пушим в Gitlab:
-`git checkout -b testbranch `  
-`git remote add gitlab http://<dockerhost_external_IP>/<your_group>/<your_project>.git   `
+`git checkout -b testbranch`   
+`git remote add gitlab http://<dockerhost_external_IP>/<your_group>/<your_project>.git`  
 `git push gitlab testbranch`  
 
 Проверяем в Gitlab состояние запустившегося pipeline в Project, который мы создали, в CI / CD -> Pipelines.
