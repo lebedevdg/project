@@ -6,7 +6,7 @@
 - [Алексей Николаев](https://github.com/nightdiverru "Алексей Николаев")
 
 ### О чем этот проект
-Реализован деплой бота [Robot](https://github.com/express42/search_engine_crawler "Robot") , [UI](https://github.com/express42/search_engine_ui "UI") для него и вспомогательных приложений(RabbitMQ, mongodb etc), а также систем мониторинга, логирования и алертинга в облако GCP. Сборка и тестирование в Gitlsb pipelines
+Реализован деплой бота [Robot](https://github.com/express42/search_engine_crawler "Robot") , [UI](https://github.com/express42/search_engine_ui "UI") для него и вспомогательных приложений(RabbitMQ, mongodb etc), а также систем мониторинга, логирования и алертинга в облако GCP. Сборка и тестирование в Gitlab pipelines
 
 
 ### Roadmap проекта
