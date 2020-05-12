@@ -153,7 +153,7 @@ https://docs.docker.com/machine/install-machine/
 
 Также в проекте в Settings -> CI / CD -> Variables добавляем переменные `DOCKER_HUB_LOGIN` и `DOCKER_HUB_PASSWORD` (для этой включить Masked) это нужно, соответственно, для загрузки собранных image на Docker Hub на нашей управляющей машине
 
-Выполняем для dev машины (это та, на которой развернут GitLab CI)
+Выполняем для dev машины (это та, на которой развернут GitLab CI):
 
 `docker-machine config dev`
 
@@ -218,9 +218,9 @@ https://docs.docker.com/machine/install-machine/
   команда включает в себя:
   - создать через docker-machine GCP машину dev (n1-standard-2, 50Gb disk)<br/>
     `make dev`
-  - создать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)<br/>
+  - создать через docker-machine GCP машину stage (n1-standard-1, 20Gb disk)<br/>
     `make stage`
-  - cоздать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)<br/>
+  - cоздать через docker-machine GCP машину prod (n1-standard-1, 20Gb disk)<br/>
     `make prod`
 
 - подготовить конфиг prometheus перед сборкой образа, заменить IP адреса stage и prod окружений<br/>
