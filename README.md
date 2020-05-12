@@ -331,15 +331,15 @@ git push gitlab testbranch`
 включает в себя:
 
 +  поднять стек с mongo, rabbit, robot, ui, fluentd  
-`    `make up`
+    `make up`
 +  поднять стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor  
-`    `make upmon`
+    `make upmon`
 +  поднять стек с prometheus, grafana, alertmanager  
-`    `make upmond`
+    `make upmond`
 +  поднять стек с gitlab  
-`    `make upgit`
+    `make upgit`
 +  поднять стек с elasticsearch, kibana  
-`    `make uplog`
+    `make uplog`
 
 #### Погасить на текущем docker окружении весь стек разом  
 
