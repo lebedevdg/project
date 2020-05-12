@@ -216,6 +216,7 @@ git push gitlab testbranch`
 ###Список функций Makefile
 
 ####поднять все сразу
+
 `make upall`
 
  команда включает в себя:
@@ -271,6 +272,7 @@ git push gitlab testbranch`
    `make upprod`
 
 ####погасить весь деплой и удалить GCP машины
+
 `make downall`
 
  включает в себя:
@@ -289,16 +291,20 @@ git push gitlab testbranch`
    ` make downenv`
 
 ####получить информацию для настройки гитлаба для подключения к docker engine стендов
+
 `make info`
 
 #### поднять runner на dev и зарегистрировать runner в гитлаб
+
 `make uprunner`
 
 #### разрегистрировать runner на dev и удалить runner из гитлаб
+
 `make downrunner`
 
 
 #### поднять на текущем docker окружении весь стек разом
+
 `make uplocal`
 
 включает в себя:
@@ -315,6 +321,7 @@ git push gitlab testbranch`
 `    `make uplog`
 
 #### погасить на текущем docker окружении весь стек разом
+
 `make downlocal`
 
 включает в себя:
@@ -331,9 +338,11 @@ git push gitlab testbranch`
 `    make downlog`
 
 #### поднять runner на текущем docker окружении и зарегистрировать runner в гитлаб
+
 `make uprunnerlocal`
 
 #### разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении
+
 `make downrunnerlocal`
 
 
