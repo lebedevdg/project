@@ -213,5 +213,127 @@ git push gitlab testbranch`
 
 `make downenv`
 
+###Список функций Makefile
+####поднять все сразу
+`make upall`
+
+ команда включает в себя:
+ +  создать GCP машины
+   ` make upenv`
+   
+     включает в себя:
+     *  создать через docker-machine GCP машину dev (n1-standard-2, 50Gb disk)
+ `make dev`
+     *  создать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)
+ `make stage`
+     *  cоздать через docker-machine GCP машину dev (n1-standard-1, 20Gb disk)
+ `make prod`
+
++  подготовить конфиг prometheus перед сборкой образа, заменить IP адреса stage и prod окружений
+`make prepare`
+
++  собрать все образы в текущем docker окружении
+ `make build`
+ 
+    включает в себя:
+  *  собрать образ ui
+ `make ui`
+  *  собрать образ robot
+ `make robot`
+  *  собрать образ prometheus
+ `make prometheus`
+  *  собрать образ mongodb-exporter
+`make mongodb-exporter`
+  *  собрать образ alertmanager
+`make alertmanager`
+ *  собрать образ grafana
+`make grafana`
+ *  собрать образ rabbitmq
+ `make rabbitmq`
+  *  собрать образ fluentd
+`make fluentd`
+ *  собрать образ на основе docker с установленным docker-compose (используется в гитлаб)
+`make docker-compose`
+
++  запушить все собранные образы в докер хаб
+ `make push`
+ 
++  поднять стек на всех стендах разом
+` make upstands`
+
+    включает в себя:
+   *  на dev поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana
+`make updev`
+   *  на stage поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+` make upstage`
+   *  на prod поднять стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+   `make upprod`
+
+####погасить весь деплой и удалить GCP машины
+`make downall`
+
+ включает в себя:
+ 
++   погасить стек на всех стендах разом
+  `make downstands`
+  
+    включает в себя:
+   *  на dev погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, prometheus, grafana, alertmanager, gitlab, elasticsearch, kibana
+   `     make downdev`
+  *  на stage погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+   `make downstage`
+  *  на prod погасить стек с mongo, rabbit, robot, ui, fluentd, node-exporter, mongodb-exporter, blackbox-exporter, cadvisor, elasticsearch, kibana
+   `make downprod`
+ *  удалить GCP машины dev, stage и prod
+   ` make downenv`
+
+####получить информацию для настройки гитлаба для подключения к docker engine стендов
+`make info`
+
+#### поднять runner на dev и зарегистрировать runner в гитлаб
+`make uprunner`
+
+#### разрегистрировать runner на dev и удалить runner из гитлаб
+`make downrunner`
+
+
+#### поднять на текущем docker окружении весь стек разом
+`make uplocal`
+
+включает в себя:
+
++  поднять стек с mongo, rabbit, robot, ui, fluentd
+`    `make up`
++  поднять стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor
+`    `make upmon`
++  поднять стек с prometheus, grafana, alertmanager
+`    `make upmond`
++  поднять стек с gitlab
+`    `make upgit`
++  поднять стек с elasticsearch, kibana
+`    `make uplog`
+
+#### погасить на текущем docker окружении весь стек разом
+`make downlocal`
+
+включает в себя:
+
++  погасить стек с mongo, rabbit, robot, ui, fluentd
+ `   make down`
++  погасить стек с node-exporter, mongodb-exporter, blackbox-exporter, cadvisor
+   ` make downmon`
++  погасить стек с prometheus, grafana, alertmanager
+   ` make downmond`
++  погасить стек с gitlab
+`    make downgit`
++  погасить стек с elasticsearch, kibana
+`    make downlog`
+
+#### поднять runner на текущем docker окружении и зарегистрировать runner в гитлаб
+`make uprunnerlocal`
+
+#### разрегистрировать runner в гитлаб и удалить runner на текущем docker окружении
+`make downrunnerlocal`
+
 
 &copy;Dreamteam 
