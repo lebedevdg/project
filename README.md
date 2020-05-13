@@ -12,6 +12,7 @@
 + [Порядок сборки](#9)
 + [Настройка пайплайнов в GitLab](#10)
 + [Список функций Makefile](#11)
++ [Видео по развертыванию и настройке](#12)
 
 ### Участники проекта
 <a name="1"></a>
@@ -337,6 +338,8 @@ https://docs.docker.com/machine/install-machine/
 
 `make downrunnerlocal`
 
-
+### Видео по развертыванию и настройке  
+<a name="12"></a>  
+https://www.youtube.com/playlist?list=PLxkno4glw7jaOvQrumxU0U8gKAM8Jsgr6
 
 &copy;Dreamteam
