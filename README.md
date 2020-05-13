@@ -116,9 +116,7 @@ https://docs.docker.com/machine/install-machine/
 
 `cp .env.example .env`
 
-Заполняем переменные внутри .env файла согласно комментариям внутри файла. Дополнительно экспортируем в окружение системы переменную `DOCKER_HUB_PASSWORD`, она понадобится для автоматической выгрузки образов в докер хаб:
-
-`export DOCKER_HUB_PASSWORD=пароль `
+Заполняем переменные внутри .env файла согласно комментариям внутри файла.  
 
 Поправим веб хук и имя канала (секция slack_configs) для отправки сообщений в Slack: monitoring/alertmanager/config.yml
 
